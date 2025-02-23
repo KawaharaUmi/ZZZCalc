@@ -18,7 +18,7 @@
         <main>
             <section>
                 <details v-for="(stat, key) in data" open>
-                    <summary><h3>No.{{ key + 1 }}</h3><span class="detail">Expected ATK:{{ expectedValue(key) }} / Amplification Ratio:{{ amplificationRatio(key) }} / Ratio to standard:{{ calcRatioToStd(key) }} </span><button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button></summary>
+                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary">Expected ATK:{{ expectedValue(key) }} / Amplification Ratio:{{ amplificationRatio(key) }} / Ratio to standard:{{ calcRatioToStd(key) }} </span><button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button></summary>
                     <table>
                         <tr>
                             <th>ATK</th><td><input type="text" size="5" v-model="stat.ATK">pts</td>
