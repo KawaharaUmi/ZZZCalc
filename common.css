@@ -11,7 +11,7 @@ body {
 }
 
 p, li, dd {
-    font-size: 12pt;
+    font-size: 1vh;
 }
 
 input, select {
@@ -20,7 +20,7 @@ input, select {
     background: #222;
     padding: 3px;
     text-align: inherit;
-    font-size: 12pt;
+    font-size: 9pt;
 }
 
 button {
