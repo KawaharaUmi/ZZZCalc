@@ -18,7 +18,7 @@
         <main>
             <section>
                 <details class="pattern" v-for="(stat, key) in data" open>
-                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary">Expected ATK:{{ expectedValue(key) }} / Amplification Ratio:{{ amplificationRatio(key) }} / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
+                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
                     <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
                     <table>
                         <tr>
@@ -32,7 +32,145 @@
                         <div>
                             <h5>Skill Damage</h5>
                             <div class="data">
-                                <h6>Basic</h6>
+                                <h6>[Basic] Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <caption>Normal</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Multiplier</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>80%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>90%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>100%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>270%</td>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table>
+                                    <caption>Advanced</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Multiplier</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>80%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>90%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>100%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>270%</td>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="data">
+                                <h6>[Dodge] Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <caption>Advanced</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Multiplier</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>80%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>90%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>100%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>270%</td>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="data">
+                                <h6>[Assist]  Level:<select><option>11</option></select></h6>
                                 <table>
                                     <thead>
                                         <tr>
@@ -111,7 +249,7 @@
                                 </table>
                             </div>
                             <div class="data">
-                                <h6>Dodge</h6>
+                                <h6>[Special] Level:<select><option>11</option></select></h6>
                                 <table>
                                     <thead>
                                         <tr>
@@ -190,165 +328,7 @@
                                 </table>
                             </div>
                             <div class="data">
-                                <h6>Assist</h6>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>&nbsp;</th>
-                                            <th>Normal</th>
-                                            <th>Critical</th>
-                                            <th>Expected</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>1st</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2nd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3rd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>TTL</th>
-                                            <td>3000</td>
-                                            <td>4500</td>
-                                            <td>3750</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>&nbsp;</th>
-                                            <th>Normal</th>
-                                            <th>Critical</th>
-                                            <th>Expected</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>1st</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2nd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3rd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>TTL</th>
-                                            <td>3000</td>
-                                            <td>4500</td>
-                                            <td>3750</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="data">
-                                <h6>Special</h6>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>&nbsp;</th>
-                                            <th>Normal</th>
-                                            <th>Critical</th>
-                                            <th>Expected</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>1st</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2nd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3rd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>TTL</th>
-                                            <td>3000</td>
-                                            <td>4500</td>
-                                            <td>3750</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>&nbsp;</th>
-                                            <th>Normal</th>
-                                            <th>Critical</th>
-                                            <th>Expected</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>1st</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2nd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3rd</th>
-                                            <td>1000</td>
-                                            <td>1500</td>
-                                            <td>1250</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>TTL</th>
-                                            <td>3000</td>
-                                            <td>4500</td>
-                                            <td>3750</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="data">
-                                <h6>Chain</h6>
+                                <h6>[Ult & Chain] Level:<select><option>11</option></select></h6>
                                 <table>
                                     <thead>
                                         <tr>

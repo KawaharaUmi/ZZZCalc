@@ -83,9 +83,16 @@ details.pattern {
 
         & div.data {
             display: flex;
+            flex-wrap: wrap;
+
+            & h6 {
+                display: flexbox;
+                min-width: 100%;
+            }
 
             & table {
                 margin: 5px;
+                min-width: calc(50% - 10px);
             }
         }
     }
