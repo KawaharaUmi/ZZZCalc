@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Attack Calc</title>
+        <link rel="stylesheet" href="common.css" type="text/css">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                  "vue": "https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.js",
+                  "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js"
+                },
+                "scopes": {}
+            }
+        </script>
+    </head>
+    <body>
+        <main>
+            <section>
+                <h1>Agent</h1>
+                <fieldset>
+                    <p>Class
+                    <select>
+                        <option>Attack</option>
+                    </select>
+                    Rank
+                    <select>
+                        <option>S</option>
+                    </select></p>
+                    <p>Name
+                        <select>
+                            <option>Ellen Joe</option>
+                        </select>
+                    </p>
+                </fieldset>
+                <details>
+                    <summary>Status</summary>
+                    <table>
+                        <tbody>
+                            <tr><th colspan="2">HP</th><td>agent.HP }}</td><th>ATK</th><td>agent.ATK }}</td></tr>
+                            <tr><th colspan="2">DEF</th><td>agent.DEF }}</td><th>Impact</th><td>agent.IMP }}</td></tr>
+                            <tr><th colspan="2">CRIT Rate</th><td>agent.CRR }}</td><th>CRIT DMG</th><td> agent.CRD }}</td></tr>
+                            <tr><th>Anomaly</th><th>Buildup</th><td> agent.ANB }}</td><th>Proficiency</th><td> agent.ANP }}</td></tr>
+                            <tr><th colspan="2">Penetrate</th><td> agent.PEN }}</td><th>EN Regen</th><td> agent.ENR }}</td></tr>
+                        </tbody>
+                    </table>
+                </details>
+            </section>
+            <section>
+                <details v-for="(stat, key) in data" open>
+                    <summary><h3>No.{{ key + 1 }}</h3><span class="detail">Expected ATK:{{ expectedValue(key) }} / Amplification Ratio:{{ amplificationRatio(key) }} / Ratio to standard:{{ calcRatioToStd(key) }} </span><button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button></summary>
+                    <table>
+                        <tr>
+                            <th>ATK</th><td><input type="text" size="5" v-model="stat.ATK">pts</td>
+                            <th>CRIT Rate</th><td><input type="text" size="5" v-model="stat.CRR">%</td>
+                            <th>CRIT DMG</th><td><input type="text" size="5" v-model="stat.CRD">%</td>
+                        </tr>
+                    </table>
+                </details>
+                <button @click="addPattern()">Add</button>
+            </section>
+        </main>
+        <script type="module">
+
+            import { createApp, ref } from 'vue'
+
+            const calcurator = createApp({
+                data() {
+                    return {
+                        dataTmp: {
+                            ATK: 0,
+                            CRR: 5,
+                            CRD: 50,
+                            EXP: 0
+                        },
+                        data: [
+                            {
+                                ATK: 2856,
+                                CRR: 68.2,
+                                CRD: 104.4,
+                                EXP: 0
+                            }
+                        ],
+                        std: 0
+                    }
+                },
+                methods: {
+                    expectedValue(key) {
+                        const data = this.data[key]
+                        return data.EXP = Math.floor(data.ATK * (1 + (data.CRD / 100) * (data.CRR / 100)))
+                    },
+                    amplificationRatio(key) {
+                        const data = this.data[key]
+                        return Math.floor(data.EXP / data.ATK * 100) / 100
+                    },
+                    calcRatioToStd(key) {
+                        const data = this.data[key]
+                        return Math.floor(data.EXP / this.data[this.std].EXP * 100) / 100
+                    },
+                    setStd(key) {
+                        this.std = key
+                    },
+                    addPattern(key = undefined) {
+                        if(key === undefined) {
+                            this.data.push(Object.assign({}, this.dataTmp))
+                        } else {
+                            this.data.splice(key, 0, Object.assign({}, this.data[key]))
+                        }
+                    },
+                    deletePattern(key) {
+                        this.data.splice(key, 1)
+                    }
+                }
+            }).mount('main')
+
+        </script>
+    </body>
+</html>
