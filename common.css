@@ -33,18 +33,19 @@ button {
     font-size: 12pt;
 }
 
-details {
+details.pattern {
     margin: 0 0 10px 0;
     min-height: 62px;
     border-radius: 31px;
     background: linear-gradient(0deg, #303030, #454545);
     box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.1) inset, 0px -1px 1px 0px rgba(0,0,0,0.2) inset;
-    padding: 8px 8px 8px 30px;
+    padding: 8px;
     line-height: 18px;
     font-size: 18px;
     color: #ddd;
 
     & summary {
+        margin: 0 20px;
 
         & h3, h4 {
             display: inline-block;
@@ -65,9 +66,37 @@ details {
             font-weight: bold;
         }
     }
+
+    & details {
+        box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
+        margin-top: 10px;
+        min-height: 46px;
+        border-radius: 23px;
+        background: #161616;
+        padding: 15px;
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: bold;
+    }
+
+    & details[open] {
+
+        & div.data {
+            display: flex;
+
+            & table {
+                margin: 5px;
+            }
+        }
+    }
+}
+
+table tr th {
+    font-size: 9pt;
 }
 
 table tr td {
+    padding: 5px;
     text-align: right;
 }
 

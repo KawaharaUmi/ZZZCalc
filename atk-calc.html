@@ -17,7 +17,7 @@
     <body>
         <main>
             <section>
-                <details v-for="(stat, key) in data" open>
+                <details class="pattern" v-for="(stat, key) in data" open>
                     <summary><h3>No.{{ key + 1 }}</h3><span class="summary">Expected ATK:{{ expectedValue(key) }} / Amplification Ratio:{{ amplificationRatio(key) }} / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
                     <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
                     <table>
@@ -31,7 +31,7 @@
                         <summary><h4>Damage Value</h4></summary>
                         <div>
                             <h5>Skill Damage</h5>
-                            <div>
+                            <div class="data">
                                 <h6>Basic</h6>
                                 <table>
                                     <thead>
@@ -110,7 +110,7 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div>
+                            <div class="data">
                                 <h6>Dodge</h6>
                                 <table>
                                     <thead>
@@ -189,7 +189,7 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div>
+                            <div class="data">
                                 <h6>Assist</h6>
                                 <table>
                                     <thead>
@@ -268,7 +268,7 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div>
+                            <div class="data">
                                 <h6>Special</h6>
                                 <table>
                                     <thead>
@@ -347,7 +347,7 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div>
+                            <div class="data">
                                 <h6>Chain</h6>
                                 <table>
                                     <thead>
