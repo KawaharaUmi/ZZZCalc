@@ -20,7 +20,7 @@
         <main>
             <section>
                 <details class="pattern" v-for="(stat, key) in data" open>
-                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary" :style="'background-image: url(./img/agent-thumb-'+key+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
+                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary" :style="'background-image: url(./img/agent-thumb-'+stat.ID+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
                     <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
                     <table>
                         <tr>
@@ -544,16 +544,6 @@
                                 <span>Promotion 5</span>
                             </div>
                             <div>
-                                <h6>Skill Level</h6>
-                                <ul>
-                                    <li><label>Basic <input type="text" size="2"></label></li>
-                                    <li><label>Dodge <input type="text" size="2"></label></li>
-                                    <li><label>Assist <input type="text" size="2"></label></li>
-                                    <li><label>Special <input type="text" size="2"></label></li>
-                                    <li><label>Chain <input type="text" size="2"></label></li>
-                                </ul>
-                            </div>
-                            <div>
                                 <h6>Basic Status</h6>
                                 <ul>
                                     <li><span>HP</span><span>1000</span></li>
@@ -571,7 +561,19 @@
                         </section>
                     </details>
                 </details>
-                <button @click="addPattern()">Add</button>
+                <div>
+                    <h3>Add Data</h3>
+                    <select v-model="selector.type">
+                        <option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option>
+                    </select>
+                    <select v-model="selector.rank">
+                        <option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option>
+                    </select>
+                    <select v-model="selector.ID">
+                        <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
+                    </select>
+                    <button @click="addPattern()">Add</button>
+                </div>
             </section>
         </main>
         <script type="module">
@@ -581,8 +583,9 @@
             const calcurator = createApp({
                 data() {
                     return {
+                        agentClass: agentClass,
                         dataTmp: {
-                            ID: 1,
+                            ID: 0,
                             ATK: 0,
                             CRR: 5,
                             CRD: 50,
@@ -597,7 +600,12 @@
                                 EXP: 0
                             }
                         ],
-                        std: 0
+                        std: 0,
+                        selector: {
+                            ID: 0,
+                            type: '',
+                            rank: ''
+                        }
                     }
                 },
                 methods: {
@@ -618,7 +626,8 @@
                     },
                     addPattern(key = undefined) {
                         if(key === undefined) {
-                            this.data.push(Object.assign({}, this.dataTmp))
+                            const newLen = this.data.push(Object.assign({}, this.dataTmp))
+                            this.data[newLen - 1].ID = this.selector.ID
                         } else {
                             this.data.splice(key, 0, Object.assign({}, this.data[key]))
                         }
