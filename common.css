@@ -45,17 +45,20 @@ details.pattern {
     color: #ddd;
 
     & summary {
-        margin: 0 20px;
+        display: flex;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        margin: 0;
 
         & h3, h4 {
-            display: inline-block;
-            margin: 0 15px 0 0;
+            margin: 0 15px;
             font-size: 18px;
             line-height: 18px;
         }
 
         & span.summary {
-            display: inline-block;
+            flex: 1 auto;
             box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
             height: 46px;
             border-radius: 23px;
@@ -64,6 +67,7 @@ details.pattern {
             font-size: 16px;
             line-height: 16px;
             font-weight: bold;
+            text-align: right;
         }
     }
 

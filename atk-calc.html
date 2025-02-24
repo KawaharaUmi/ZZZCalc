@@ -3,6 +3,8 @@
     <head>
         <title>Attack Calc</title>
         <link rel="stylesheet" href="common.css" type="text/css">
+        <script src="./lib/data.js"></script>
+        <script src="./lib/agent.js"></script>
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
         <script type="importmap">
             {
@@ -18,7 +20,7 @@
         <main>
             <section>
                 <details class="pattern" v-for="(stat, key) in data" open>
-                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
+                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary" :style="'background-image: url(./img/agent-thumb-'+key+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
                     <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
                     <table>
                         <tr>
@@ -580,7 +582,7 @@
                 data() {
                     return {
                         dataTmp: {
-                            ID: 0,
+                            ID: 1,
                             ATK: 0,
                             CRR: 5,
                             CRD: 50,
@@ -588,6 +590,7 @@
                         },
                         data: [
                             {
+                                ID: 0,
                                 ATK: 2856,
                                 CRR: 68.2,
                                 CRD: 104.4,
