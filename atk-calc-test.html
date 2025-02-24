@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Attack Calc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="stylesheet" href="common.css" type="text/css">
+        <script src="./lib/define.js"></script>
+        <script src="./lib/data.js"></script>
+        <script src="./lib/agent.js"></script>
+        <script src="./lib/w-engine.js"></script>
+        <script src="./lib/disc-driver.js"></script>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                  "vue": "https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.js",
+                  "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js"
+                },
+                "scopes": {}
+            }
+        </script>
+    </head>
+    <body>
+        <main>
+            <section>
+                <details class="pattern" v-for="(agent, key) in data" open>
+                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
+                    <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
+                    <table>
+                        <tr>
+                            <th>ATK</th><td>{{ agent.total.atk }}</td>
+                            <th>CRIT Rate</th><td>{{ agent.total.critR }}%</td>
+                            <th>CRIT DMG</th><td>{{ agent.total.critD }}%</td>
+                        </tr>
+                    </table>
+                    <details class="damage-data">
+                        <summary><h4>Damage Value</h4></summary>
+                        <div>
+                            <h5>Skill Damage</h5>
+                            <div class="data">
+                                <h6>[Basic] Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <caption>Normal</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Multiplier</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>80%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>90%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>100%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>270%</td>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table>
+                                    <caption>Advanced</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Multiplier</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>80%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>90%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>100%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>270%</td>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="data">
+                                <h6>[Dodge] Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <caption>Advanced</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Multiplier</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>80%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>90%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>100%</td>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>270%</td>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="data">
+                                <h6>[Assist]  Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="data">
+                                <h6>[Special] Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="data">
+                                <h6>[Ult & Chain] Level:<select><option>11</option></select></h6>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Normal</th>
+                                            <th>Critical</th>
+                                            <th>Expected</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1st</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>2nd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                        <tr>
+                                            <th>3rd</th>
+                                            <td>1000</td>
+                                            <td>1500</td>
+                                            <td>1250</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>TTL</th>
+                                            <td>3000</td>
+                                            <td>4500</td>
+                                            <td>3750</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <h5>Anomaly Damage</h5>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Normal</th>
+                                        <th>Critical</th>
+                                        <th>Expected</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>10000</td>
+                                        <td>15000</td>
+                                        <td>12500</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details class="agent-setup">
+                        <summary><h4>Equipment & Agent Setup</h4></summary>
+                        <section>
+                            <h5>Disc Driver</h5>
+                            <div>
+                                <p><label><input type="radio" name="combination" v-model="agent.equipment.discPattern" :value="Number(0)">4+2</label> <label><input type="radio" name="combination" v-model="agent.equipment.discPattern" :value="Number(1)">2+2+2</label></p>
+                                <select v-for="i in agent.equipment.discPattern +2" v-model="agent.equipment.discSet[i]">
+                                    <option v-for="(data, key) in discClass.data" :value="key">{{ data[1] }}</option>
+                                </select>
+                            </div>
+                            <div class="flex">
+                                <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
+                                    <legend>Slot {{ key + 1 }}</legend>
+                                    <p v-if="key < 3">Main : {{ define.display[discClass.mainTable[key]] }} +{{ discClass.getMainStat(discClass.mainTable[key], disc.level) }}</p>
+                                    <p v-else>Main : <select v-model="agent.equipment.disc[key].main"><option v-for="(name, key) in discClass.mainTable[key]" :value="name">{{ define.display[name] }}</option></select> +{{ discClass.getMainStat(agent.equipment.disc[key].main, disc.level) }}%</p>
+                                    <p>Sub</p>
+                                    <div v-for="i in 4">
+                                        <select>
+                                            <option v-for="(sub, key) in discClass.sub" :value="key">{{ define.display[key] }}</option>
+                                        </select>
+                                        <select>
+                                            <option v-for="j in 6" :value="j - 1">{{ j - 1 }}</option>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </section>
+                        <section>
+                            <h5>W-Engine</h5>
+                            <div>
+                                <label>Class <select><option>Attack</option></select></label>
+                                <label>Rank <select><option>S</option></select></label>
+                                <label>Name <select><option>Deep Sea Visitor</option></select></label>
+                                <span>Level 60</span>
+                                <span>Promotion 5</span>
+                            </div>
+                        </section>
+                        <section>
+                            <h5>Agent</h5>
+                            <div>
+                                <label>Class <select v-model="agent.type"><option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option></select></label>
+                                <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
+                                <label>Name <select v-model="agent.charId" @change="agent.changeChar()"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label>
+                                <span>Promotion {{ agent.promotion }}</span>
+                                <span>Level {{ agent.level }}</span>
+                            </div>
+                            <div>
+                                <table class="value-details">
+                                    <colgroup>
+                                        <col span="2">
+                                        <col>
+                                        <col span="2">
+                                        <col span="2">
+                                        <col>
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" rowspan="2">Value Details</th>
+                                            <th rowspan="2">Agent</th>
+                                            <th colspan="2">W-Engine</th>
+                                            <th colspan="2">Disc Driver</th>
+                                            <th rowspan="2">Total</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Main</th>
+                                            <th>Sub</th>
+                                            <th>%</th>
+                                            <th>Val</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th colspan="2">HP</th>
+                                            <td>{{ agent.base.hp }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0%</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">ATK</th>
+                                            <td>{{ agent.base.atk }}</td>
+                                            <td>{{ agent.equipment.wEngine.atk }}</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">DEF</th>
+                                            <td>{{ agent.base.def }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0%</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">Impact</th>
+                                            <td>{{ agent.base.imp }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="2">CRIT</th>
+                                            <th>Rate</th>
+                                            <td>{{ agent.base.critR }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>DMG%</th>
+                                            <td>{{ agent.base.critD }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="2">ANOM</th>
+                                            <th>Buildup</th>
+                                            <td>{{ agent.base.anmB }}</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Prof.</th>
+                                            <td>{{ agent.base.anmP }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="2">PEN</th>
+                                            <th>Rate</th>
+                                            <td>0</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Value</th>
+                                            <td>0</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">EN Regen</th>
+                                            <td>{{ agent.base.enReg }}</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="5">DMG Bonus</th>
+                                            <th>Physical</th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fire</th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ice</th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Electric</th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ether</th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>0%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </details>
+                </details>
+                <div>
+                    <h3>Add Data</h3>
+                    <select v-model="selector.type">
+                        <option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option>
+                    </select>
+                    <select v-model="selector.rank">
+                        <option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option>
+                    </select>
+                    <select v-model="selector.charId">
+                        <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
+                    </select>
+                    <button @click="addPattern()">Add</button>
+                </div>
+            </section>
+        </main>
+        <script type="module">
+
+            import { createApp, ref } from 'vue'
+
+            const calcurator = createApp({
+                data() {
+                    return {
+                        define: define,
+                        agentClass: agentClass,
+                        discClass: discClass,
+                        data: [ new agentClass(0) ],
+                        std: 0,
+                        selector: {
+                            charId: 0,
+                            type: '',
+                            rank: ''
+                        }
+                    }
+                },
+                methods: {
+                    expectedValue(key) {
+                        const data = this.data[key]
+                        return data.EXP = Math.floor(data.ATK * (1 + (data.CRD / 100) * (data.CRR / 100)))
+                    },
+                    amplificationRatio(key) {
+                        const data = this.data[key]
+                        return Math.floor(data.EXP / data.ATK * 100) / 100
+                    },
+                    calcRatioToStd(key) {
+                        const data = this.data[key]
+                        return Math.floor(data.EXP / this.data[this.std].EXP * 100) / 100
+                    },
+                    setStd(key) {
+                        this.std = key
+                    },
+                    addPattern(key = undefined) {
+                        if(key === undefined) {
+                            this.data.push(Object.assign({}, new agentClass(this.selector.charId)))
+                        } else {
+                            this.data.splice(key, 0, Object.assign({}, this.data[key]))
+                        }
+                    },
+                    deletePattern(key) {
+                        this.data.splice(key, 1)
+                    }
+                }
+            }).mount('main')
+
+        </script>
+    </body>
+</html>

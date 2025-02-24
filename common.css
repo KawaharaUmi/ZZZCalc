@@ -11,7 +11,7 @@ body {
 }
 
 p, li, dd {
-    font-size: 1vh;
+    font-size: 10pt;
 }
 
 input, select {
@@ -103,12 +103,36 @@ details.pattern {
 }
 
 table tr th {
-    font-size: 9pt;
+    font-size: 8pt;
 }
 
 table tr td {
     padding: 5px;
     text-align: right;
+    font-size: 10pt;
+}
+
+div.flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+fieldset.disc {
+    width: 33%;
+    border-radius: 10px;
+    border: solid 1px #333;
+    padding: 5px;
+}
+
+@media screen and (max-width: 959px) {
+    
+}
+
+@media screen and (max-width: 480px) {
+    fieldset.disc {
+        width: calc(50% - 3px);
+    }
 }
 
 section#disc-detail {
@@ -118,5 +142,25 @@ section#disc-detail {
 
     & fieldset {
         display: flexbox;
+    }
+}
+
+table.value-details {
+    width: 100%;
+    
+    & tbody tr:nth-of-type(odd) {
+        background: #282828;
+    }
+
+    & tbody th {
+        padding: 0 3px;
+        text-align: right;
+        font-size:8pt
+    }
+
+    & td {
+        width: 13%;
+        border-bottom: solid 1px #666;
+        font-size: 9pt;
     }
 }
