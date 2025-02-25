@@ -469,12 +469,10 @@
                         </section>
                         <section>
                             <h5>W-Engine</h5>
-                            <div>
-                                <p><label>Class <select><option>Attack</option></select></label>
-                                <label>Rank <select><option>S</option></select></label>
-                                <label>Name <select><option>Deep Sea Visitor</option></select></label></p>
-                                <p><span>Level 60</span> / <span>Promotion 5</span></p>
-                            </div>
+                            <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
+                                <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
+                                <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
+                            <p><span>Level 60</span> / <span>Promotion 5</span></p>
                         </section>
                         <section>
                             <h5>Agent</h5>
@@ -684,6 +682,7 @@
                     return {
                         define: define,
                         agentClass: agentClass,
+                        wEngineClass: wEngineClass,
                         discClass: discClass,
                         data: [ new agentClass(0) ],
                         std: 0,
