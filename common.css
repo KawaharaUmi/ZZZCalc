@@ -4,6 +4,7 @@
     padding: 0;
     color: #fff;
     list-style: none;
+    font-family:"Century Gothic", sans-serif;
 }
 
 body {
@@ -30,29 +31,14 @@ h6.skill {
     height: 30px;
     padding-left: 35px;
     background-repeat: no-repeat;
-}
-
-h6.basic {
-    background-image: url(./img/icon_skill_basic.webp);
     background-size: 30px;
 }
 
-h6.dodge {
-    background-image: url(./img/icon_skill_dodge.webp);
-    background-size: 30px;
-}
-h6.assist {
-    background-image: url(./img/icon_skill_assist.webp);
-    background-size: 30px;
-}
-h6.special {
-    background-image: url(./img/icon_skill_special.webp);
-    background-size: 30px;
-}
-h6.chain {
-    background-image: url(./img/icon_skill_chain.webp);
-    background-size: 30px;
-}
+h6.basic { background-image: url(./img/icon_skill_basic.webp); }
+h6.dodge { background-image: url(./img/icon_skill_dodge.webp); }
+h6.assist { background-image: url(./img/icon_skill_assist.webp); }
+h6.special { background-image: url(./img/icon_skill_special.webp); }
+h6.chain { background-image: url(./img/icon_skill_chain.webp); }
 
 p, li, dd {
     font-size: 10pt;
@@ -85,7 +71,13 @@ button {
     font-size: 12pt;
 }
 
-details.pattern {
+details.pattern[open] {
+    
+    max-height: calc(100vh - 80px);
+    overflow-y: scroll;
+}
+
+section.pattern {
     margin: 0 0 10px 0;
     min-height: 62px;
     border-radius: 31px;
@@ -96,7 +88,7 @@ details.pattern {
     font-size: 18px;
     color: #ddd;
 
-    & summary {
+    & header {
         display: flex;
         justify-content: center;
         justify-items: center;
@@ -109,7 +101,7 @@ details.pattern {
             line-height: 18px;
         }
 
-        & span.summary {
+        & div.summary {
             flex: 1 auto;
             box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
             height: 46px;
@@ -236,16 +228,6 @@ fieldset.disc {
 
     fieldset.disc {
         width: calc(50% - 3px);
-    }
-}
-
-section#disc-detail {
-    & div#disc-setting {
-        display: flex;
-    }
-
-    & fieldset {
-        display: flexbox;
     }
 }
 

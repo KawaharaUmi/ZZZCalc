@@ -23,8 +23,11 @@
     <body>
         <main>
             <section>
-                <details class="pattern" v-for="(agent, key) in data" open>
-                    <summary><h3>No.{{ key + 1 }}</h3><span class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </span></summary>
+                <section v-for="(agent, key) in data" class="pattern" :id="'pattern-' + key">
+                    <header>
+                        <h3 class="hidden-mobile">No.{{ key + 1 }}</h3>
+                        <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </div>
+                    </header>
                     <table>
                         <tr>
                             <th>ATK</th><td>{{ agent.total.atk }}</td>
@@ -33,8 +36,8 @@
                         </tr>
                     </table>
                     <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
-                    <details class="damage-data">
-                        <summary><h4>Damage Value</h4></summary>
+                    <details class="skill-data">
+                        <summary><h4>Skills</h4></summary>
                         <div>
                             <h5>Skill Damage</h5>
                             <div class="data">
@@ -480,7 +483,7 @@
                                 <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
                                 <label>Name <select v-model="agent.charId" @change="agent.initAgent(agent.charId)"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label>
                             <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span></p>
-                            <h5>Status Dtails</h5>
+                            <h5>Status Details</h5>
                             <table class="value-details">
                                 <colgroup>
                                     <col span="2">
@@ -657,7 +660,7 @@
                             </table>
                         </section>
                     </details>
-                </details>
+                </section>
                 <div>
                     <h3>Add Data</h3>
                     <select v-model="selector.type">
