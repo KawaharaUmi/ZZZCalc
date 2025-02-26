@@ -26,16 +26,30 @@
                 <section v-for="(agent, key) in data" class="pattern" :id="'pattern-' + key">
                     <header>
                         <h3 class="hidden-mobile">No.{{ key + 1 }}</h3>
-                        <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">Expected ATK:{{ expectedValue(key) }} (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }} </div>
+                        <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">
+                            <p>Expected ATK<br><b class="number">{{ expectedValue(key) }}</b><span class="hidden-mobile"> (Ratio:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }}</span></p>
+                            <ul class="equipment">
+                                <li class="w-engine"><img :src="'./img/icon_wengine_' + agent.equipment.wEngine.id + '.webp'" width="40px" height="40px"></li>
+                                <li v-for="key in agent.equipment.discPattern + 2" :class="'disc set'+ key"><img :src="'./img/icon_disc_' + agent.equipment.discSet[key - 1] + '.webp'" width="40px" height="40px"></li>
+                            </ul>
+                        </div>
+                        <table>
+                            <tr>
+                                <th>ATK</th><td>{{ agent.total.atk }}</td>
+                                <th>CRIT Rate</th><td>{{ agent.total.critR }}%</td>
+                                <th>CRIT DMG</th><td>{{ agent.total.critD }}%</td>
+                            </tr>
+                        </table>
+                        <details class="control">
+                            <summary>⚙️</summary>
+                            <ul>
+                                <li><button @click="setStd(key)">Set to standard</button></li>
+                                <li><button @click="addPattern(key)">Duplication</button></li>
+                                <li><button title="Delete" @click="deletePattern(key)">Delete</button></li>
+                            </ul>
+                        </details>
                     </header>
-                    <table>
-                        <tr>
-                            <th>ATK</th><td>{{ agent.total.atk }}</td>
-                            <th>CRIT Rate</th><td>{{ agent.total.critR }}%</td>
-                            <th>CRIT DMG</th><td>{{ agent.total.critD }}%</td>
-                        </tr>
-                    </table>
-                    <button @click="setStd(key)">Set to standard</button><button @click="addPattern(key)">Duplication</button><button title="Delete" @click="deletePattern(key)">✕</button>
+                    <div>
                     <details class="skill-data">
                         <summary><h4>Skills</h4></summary>
                         <div>
@@ -660,6 +674,7 @@
                             </table>
                         </section>
                     </details>
+                    </div>
                 </section>
                 <div>
                     <h3>Add Data</h3>
