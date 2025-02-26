@@ -225,41 +225,44 @@
                     <section class="wraper">
                         <section class="skill-data close">
                             <h4>Skill Damage</h4>
-                            <div v-for="val,key in define.skillType" class="data">
-                                <h5 :class="'skill ' + val">[{{ val }}] Level:<select v-model="agent.skills[val].level"><option v-for="i in 16" :value="i - 1">{{ i }}</option></select></h5>
-                                <table v-for="data, key in agent.skills[val].data">
-                                    <caption>{{ data.name.jp }}</caption>
-                                    <thead>
-                                        <tr>
-                                            <th>&nbsp;</th>
-                                            <th>Attr.</th>
-                                            <th>Multiplier</th>
-                                            <th>Normal</th>
-                                            <th>Critical</th>
-                                            <th>Expected</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="param, key in data.params">
-                                            <th>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
-                                            <td><img :src="'./img/icon_type_' + param.type + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute + '.png'" width="16px" height="16px"></td>
-                                            <td>{{ agent.calcDmg(data, key, 'multiplier') }}%</td>
-                                            <td>{{ agent.calcDmg(data, key, 'normal') }}</td>
-                                            <td>{{ agent.calcDmg(data, key, 'critical')}}</td>
-                                            <td><b>{{ agent.calcDmg(data, key, 'expected') }}</b></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr v-if="data.combo == 'TRUE'">
-                                            <th>TTL</th>
-                                            <td>&nbsp;</td>
-                                            <td>270%</td>
-                                            <td>3000</td>
-                                            <td>4500</td>
-                                            <td>3750</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <div>
+                                <div v-for="val,key in define.skillType" class="data">
+                                    <h5 :class="'skill ' + val">[{{ val }}] Level:<select v-model="agent.skills[val].level"><option v-for="i in 16" :value="i - 1">{{ i }}</option></select></h5>
+                                    <table v-for="data, key in agent.skills[val].data">
+                                        <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
+                                        <thead>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                <th>Attr.</th>
+                                                <th>Multiplier</th>
+                                                <th>Normal</th>
+                                                <th>Critical</th>
+                                                <th>Expected</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="param, key in data.params">
+                                                <th v-if="data.group.secondary == 'charge'">{{ 'Lv.' + (key + 1) }}</th>
+                                                <th v-else>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
+                                                <td><img :src="'./img/icon_type_' + param.type + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute + '.png'" width="16px" height="16px"></td>
+                                                <td>{{ agent.calcDmg(data, key, 'multiplier') }}%</td>
+                                                <td>{{ agent.calcDmg(data, key, 'normal') }}</td>
+                                                <td>{{ agent.calcDmg(data, key, 'critical')}}</td>
+                                                <td><b>{{ agent.calcDmg(data, key, 'expected') }}</b></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr v-if="data.combo == 'TRUE'">
+                                                <th>TTL</th>
+                                                <td>&nbsp;</td>
+                                                <td>270%</td>
+                                                <td>3000</td>
+                                                <td>4500</td>
+                                                <td>3750</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                             <h4>Anomaly Damage</h4>
                             <div>
