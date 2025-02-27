@@ -1,16 +1,16 @@
-0,Swing Jazz,スイング・ジャズ,en-reg,20
-1,Woodpecker Electro,ウッドペッカー・エレクトロ,crit-r,8
-2,Puffer Electro,パファー・エレクトロ,pen-p,8
-3,Shockstar Disco,ショックスター・ディスコ,imp-p,6
-4,Freedom Blues,フリーダム・ブルース,anm-p,30
-5,Hormone Punk,ホルモン・パンク,atk-p,10
-6,Soul Rock,ソウル・ロック,def-p,16
-7,Inferno Metal,炎獄のヘヴィメタル,bonus-fire,10
-8,Chaotic Metal,混沌のヘヴィメタル,bonus-eth,10
-9,Thunder Metal,霹靂のヘヴィメタル,bonus-ele,10
-10,Polar Metal,極地のヘヴィメタル,bonus-ice,10
-11,Fanged Metal,獣牙のヘヴィメタル,bonus-phy,10
-12,Proto Punk,プロト・パンク,shield,15
-13,Chaos Jazz,ケイオス・ジャズ,anm-p,30
-14,Branch & Blade Song,折枝の刀歌,crit-d,16
-15,Astral Voice,静寂のアストラ,atk-p,10
+0,Swing Jazz,スイング・ジャズ,en-reg,20,assist
+1,Woodpecker Electro,ウッドペッカー・エレクトロ,crit-r,8,attack
+2,Puffer Electro,パファー・エレクトロ,pen-p,8,attack
+3,Shockstar Disco,ショックスター・ディスコ,imp-p,6,stun
+4,Freedom Blues,フリーダム・ブルース,anm-p,30,anomaly
+5,Hormone Punk,ホルモン・パンク,atk-p,10,attack
+6,Soul Rock,ソウル・ロック,def-p,16,defense
+7,Inferno Metal,炎獄のヘヴィメタル,bonus-fire,10,dmg-bonus
+8,Chaotic Metal,混沌のヘヴィメタル,bonus-eth,10,dmg-bonus
+9,Thunder Metal,霹靂のヘヴィメタル,bonus-ele,10,dmg-bonus
+10,Polar Metal,極地のヘヴィメタル,bonus-ice,10,dmg-bonus
+11,Fanged Metal,獣牙のヘヴィメタル,bonus-phy,10,dmg-bonus
+12,Proto Punk,プロト・パンク,shield,15,shield
+13,Chaos Jazz,ケイオス・ジャズ,anm-p,30,anomaly
+14,Branch & Blade Song,折枝の刀歌,crit-d,16,anomaly
+15,Astral Voice,静寂のアストラ,atk-p,10,assist

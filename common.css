@@ -77,7 +77,8 @@ button {
 
 section.pattern {
     position: relative;
-    margin: 0 0 10px 0;
+    margin: 0 auto 10px auto;
+    max-width: 800px;
     min-height: 62px;
     max-height: calc(100dvh - 18px);
     border-radius: 31px;
@@ -96,10 +97,15 @@ section.pattern {
         flex-wrap: wrap;
         margin: 0;
 
-        & h3, h4 {
-            margin: 0 15px;
-            font-size: 18px;
-            line-height: 18px;
+        & h3 {
+            margin: 0;
+            width: 75px;
+            height: 46px;
+            text-align: right;
+            line-height: 32pt;
+            font-size: 48pt;
+            font-weight: bolder;
+            opacity: 0.2;
         }
 
         & div.summary {
@@ -158,6 +164,7 @@ section.pattern {
     }
 
     & details.status {
+        z-index: 1;
         position: absolute;
         width: calc(100% - 16px);
         border-radius: 15px;
@@ -250,6 +257,94 @@ section.pattern {
                     line-height: 10pt;
                     font-size: 10pt;
                 }
+
+                & tr * {
+                    border-bottom: dashed 1px #333;
+                }
+            }
+        }
+
+        & section.driver {
+            & div.disc {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                row-gap: 4px;
+
+                & label {
+                    z-index: 0;
+                    position: relative;
+                    overflow: hidden;
+                    width: 24%;
+                    height: 40px;
+                    border-radius: 20px;
+                    border: solid 2px #000;
+                    background-color: rgba(0,0,0,0.5);
+                    background-blend-mode: darken;
+                    background-position: 25px 50%;
+                    background-repeat: no-repeat;
+                    background-size: 75%;
+                    text-align: right;
+                    line-height: 50px;
+                    font-size: 9pt;
+                    font-weight: bold;
+
+                    & * {
+                        visibility: hidden;
+                        width: 1px;
+                        height: 1px;
+                    }
+                }
+
+                & label:has(input:disabled) {
+                    filter: grayscale();
+                }
+
+                & label:has(input:checked) {
+                    border-color: #3c3;
+                    background-position-x: 25px;
+                    background-size: 75%;
+                    background-color: #000;
+                    background-blend-mode: normal;
+                }
+
+                & label:has(input:checked)::before {
+                    position: absolute;
+                    top: 6px;
+                    left: 6px;
+                    display: block;
+                    width: 18px;
+                    height: 18px;
+                    border: solid 2px #161616;
+                    border-radius: 14px;
+                    background: #3c3;
+                    text-align: center;
+                    line-height: 18px;
+                    font-size: 16px;
+                    font-weight: bolder;
+                    color: #000;
+                }
+
+                & label:has(input[data-slot="0"])::before { content:'1' }
+                & label:has(input[data-slot="1"])::before { content:'2' }
+                & label:has(input[data-slot="2"])::before { content:'3' }
+
+                & label[data-id='0'] { background-image: url(./img/icon_disc_0.webp) }
+                & label[data-id='1'] { background-image: url(./img/icon_disc_1.webp) }
+                & label[data-id='2'] { background-image: url(./img/icon_disc_2.webp) }
+                & label[data-id='3'] { background-image: url(./img/icon_disc_3.webp) }
+                & label[data-id='4'] { background-image: url(./img/icon_disc_4.webp) }
+                & label[data-id='5'] { background-image: url(./img/icon_disc_5.webp) }
+                & label[data-id='6'] { background-image: url(./img/icon_disc_6.webp) }
+                & label[data-id='7'] { background-image: url(./img/icon_disc_7.webp) }
+                & label[data-id='8'] { background-image: url(./img/icon_disc_8.webp) }
+                & label[data-id='9'] { background-image: url(./img/icon_disc_9.webp) }
+                & label[data-id='10'] { background-image: url(./img/icon_disc_10.webp) }
+                & label[data-id='11'] { background-image: url(./img/icon_disc_11.webp) }
+                & label[data-id='12'] { background-image: url(./img/icon_disc_12.webp) }
+                & label[data-id='13'] { background-image: url(./img/icon_disc_13.webp) }
+                & label[data-id='14'] { background-image: url(./img/icon_disc_14.webp) }
+                & label[data-id='15'] { background-image: url(./img/icon_disc_15.webp) }
             }
         }
     }
@@ -276,7 +371,7 @@ fieldset {
     
     & legend {
         padding: 0 5px;
-        font-size: 11pt;
+        font-size: 9pt;
         font-weight: bold;
     }
 }
@@ -292,7 +387,6 @@ section.driver {
         background-size: 100px;
         background-position: -10px;
         padding: 10px 15px 0 95px;
-        filter: brightness(0.9);
     }
 
     & .disctype-0 { background-image: url(./img/icon_disc_0.webp); }
