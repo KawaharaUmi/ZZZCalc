@@ -191,8 +191,9 @@ section.pattern {
     }
     
     & > section.wrapper {
-        overflow: scroll;
         display: flex;
+        overflow-x: scroll;
+        overflow-y: hidden;
         scroll-snap-type: x mandatory;
         box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
         margin-top: 10px;
@@ -203,6 +204,7 @@ section.pattern {
         padding: 0;
 
         & > section {
+            overflow-y: scroll;
             scroll-snap-align: center;
             scroll-snap-stop: always;
             flex-shrink: 0;
