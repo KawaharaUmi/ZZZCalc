@@ -189,13 +189,11 @@ section.pattern {
             & tr:nth-of-type(16) { display:none; }
         }
     }
-
-    & > section.close {
-        display: none;
-    }
     
-    & > section {
+    & > section.wrapper {
         overflow: scroll;
+        display: flex;
+        scroll-snap-type: x mandatory;
         box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
         margin-top: 10px;
         max-height: 90vh;
@@ -203,6 +201,12 @@ section.pattern {
         border: solid 8px #161616;
         background: #161616;
         padding: 0;
+
+        & > section {
+            scroll-snap-align: start;
+            max-width: 100%;
+            min-width: 100%;
+        }
 
         & div.data {
             display: flex;
@@ -257,7 +261,7 @@ fieldset {
     }
 }
 
-section.disc {
+section.driver {
 
     & [class*="disctype"] {
         width: calc(50% - 3px);

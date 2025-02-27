@@ -59,7 +59,7 @@
                                         <th colspan="2" rowspan="2">&nbsp;</th>
                                         <th rowspan="2">Agent</th>
                                         <th colspan="2">W-Engine</th>
-                                        <th colspan="2">Disc Driver</th>
+                                        <th colspan="2">Driver</th>
                                         <th rowspan="2">Total</th>
                                     </tr>
                                     <tr>
@@ -222,8 +222,58 @@
                             </table>
                         </div>
                     </section>
-                    <section class="wraper">
-                        <section class="skill-data close">
+                    <section class="wrapper">
+                        <section class="basics">
+                            <h4>Agent</h4>
+                            <div>
+                                <p><label>Class <select v-model="agent.type"><option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option></select></label>
+                                    <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
+                                    <label>Name <select v-model="agent.charId" @change="agent.initAgent(agent.charId)"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label></p>
+                                <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span></p>
+                            </div>
+                            <h4>W-Engine</h4>
+                            <div>
+                                <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
+                                    <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
+                                    <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
+                                <p><span>Level 60</span> / <span>Promotion 5</span></p>
+                            </div>
+                        </section>
+                        <section class="driver">
+                            <h4>Driver</h4>
+                            <div>
+                                <p>Combination : <label><input type="radio" name="combination" v-model="agent.equipment.discPattern" :value="Number(0)">4+2pcs.</label> <label><input type="radio" name="combination" v-model="agent.equipment.discPattern" :value="Number(1)">2+2+2pcs.</label></p>
+                                <div class="flex">
+                                    <fieldset v-for="i in agent.equipment.discPattern +2" :class="'disctype-' + agent.equipment.discSet[i - 1]">
+                                        <select v-model="agent.equipment.discSet[i - 1]" @change="agent.calcDiscTotal()">
+                                            <option v-for="(data, key) in discClass.data" :value="key">{{ data[2] }}</option>
+                                        </select>
+                                        <ul>
+                                            <li>{{ define.display[discClass.data[agent.equipment.discSet[i - 1]][3]] }} +{{ discClass.data[agent.equipment.discSet[i - 1]][4] }}%</li>
+                                        </ul>
+                                    </fieldset>
+                                </div>
+                                <div class="flex">
+                                    <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
+                                        <legend>Partition {{ key + 1 }}</legend>
+                                        <p v-if="key < 3"><span class="hidden-mobile">Main : </span>{{ define.display[discClass.mainTable[key]] }} +{{ discClass.getMainStat(discClass.mainTable[key], disc.level) }}</p>
+                                        <p v-else><span class="hidden-mobile">Main : </span><select v-model="agent.equipment.disc[key].main" @change="agent.calcDiscTotal()"><option v-for="(name, key) in discClass.mainTable[key]" :value="name">{{ define.display[name] }}</option></select> +{{ discClass.getMainStat(agent.equipment.disc[key].main, disc.level) }}%</p>
+                                        <ul>
+                                            <li v-for="i in 4">
+                                                <select v-model="disc.sub[i-1].type" @change="agent.calcDiscTotal()">
+                                                    <option v-for="(sub, key) in discClass.sub" :value="key">{{ define.display[key] }}</option>
+                                                </select>
+                                                <select v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()">
+                                                    <option v-for="j in 6" :value="j - 1">{{ j - 1 }}</option>
+                                                </select>
+                                                +{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}
+                                            </li>
+                                        </ul>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="skill">
                             <h4>Skill Damage</h4>
                             <div>
                                 <div v-for="val,key in define.skillType" class="data">
@@ -282,56 +332,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                        </section>
-                        <section class="disc close">
-                            <h4>Disc Driver</h4>
-                            <div>
-                                <p>Combination : <label><input type="radio" name="combination" v-model="agent.equipment.discPattern" :value="Number(0)">4+2pcs.</label> <label><input type="radio" name="combination" v-model="agent.equipment.discPattern" :value="Number(1)">2+2+2pcs.</label></p>
-                                <div class="flex">
-                                    <fieldset v-for="i in agent.equipment.discPattern +2" :class="'disctype-' + agent.equipment.discSet[i - 1]">
-                                        <select v-model="agent.equipment.discSet[i - 1]" @change="agent.calcDiscTotal()">
-                                            <option v-for="(data, key) in discClass.data" :value="key">{{ data[2] }}</option>
-                                        </select>
-                                        <ul>
-                                            <li>{{ define.display[discClass.data[agent.equipment.discSet[i - 1]][3]] }} +{{ discClass.data[agent.equipment.discSet[i - 1]][4] }}%</li>
-                                        </ul>
-                                    </fieldset>
-                                </div>
-                                <div class="flex">
-                                    <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
-                                        <legend>Partition {{ key + 1 }}</legend>
-                                        <p v-if="key < 3"><span class="hidden-mobile">Main : </span>{{ define.display[discClass.mainTable[key]] }} +{{ discClass.getMainStat(discClass.mainTable[key], disc.level) }}</p>
-                                        <p v-else><span class="hidden-mobile">Main : </span><select v-model="agent.equipment.disc[key].main" @change="agent.calcDiscTotal()"><option v-for="(name, key) in discClass.mainTable[key]" :value="name">{{ define.display[name] }}</option></select> +{{ discClass.getMainStat(agent.equipment.disc[key].main, disc.level) }}%</p>
-                                        <ul>
-                                            <li v-for="i in 4">
-                                                <select v-model="disc.sub[i-1].type" @change="agent.calcDiscTotal()">
-                                                    <option v-for="(sub, key) in discClass.sub" :value="key">{{ define.display[key] }}</option>
-                                                </select>
-                                                <select v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()">
-                                                    <option v-for="j in 6" :value="j - 1">{{ j - 1 }}</option>
-                                                </select>
-                                                +{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}
-                                            </li>
-                                        </ul>
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="basics close">
-                            <h4>Agent</h4>
-                            <div>
-                                <p><label>Class <select v-model="agent.type"><option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option></select></label>
-                                    <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
-                                    <label>Name <select v-model="agent.charId" @change="agent.initAgent(agent.charId)"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label></p>
-                                <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span></p>
-                            </div>
-                            <h4>W-Engine</h4>
-                            <div>
-                                <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
-                                    <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
-                                    <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
-                                <p><span>Level 60</span> / <span>Promotion 5</span></p>
                             </div>
                         </section>
                     </section>
