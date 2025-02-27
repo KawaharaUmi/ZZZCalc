@@ -204,6 +204,8 @@ section.pattern {
 
         & > section {
             scroll-snap-align: start;
+            scroll-snap-stop: always;
+            flex-shrink: 0;
             max-width: 100%;
             min-width: 100%;
         }
