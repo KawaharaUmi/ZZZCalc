@@ -203,7 +203,7 @@ section.pattern {
         padding: 0;
 
         & > section {
-            scroll-snap-align: start;
+            scroll-snap-align: center;
             scroll-snap-stop: always;
             flex-shrink: 0;
             max-width: 100%;
