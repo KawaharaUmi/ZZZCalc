@@ -42,270 +42,296 @@
                             </ul>
                         </details>
                     </header>
-                    <details class="status">
-                        <summary><h4>Status</h4></summary>
-                        <div>
-                            <label><input type="radio" name="size" class="full">Full</label> <label><input type="radio" name="size" class="medium">Medium</label> <label><input type="radio" name="size" class="small" checked>Small</label>
-                            <table class="value-details">
-                                <colgroup>
-                                    <col span="2">
-                                    <col>
-                                    <col span="2">
-                                    <col span="2">
-                                    <col>
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th colspan="2" rowspan="2">&nbsp;</th>
-                                        <th rowspan="2">Agent</th>
-                                        <th colspan="2">W-Engine</th>
-                                        <th colspan="2">Driver</th>
-                                        <th rowspan="2">Total</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Base</th>
-                                        <th>Adv.</th>
-                                        <th>%</th>
-                                        <th>Val</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th colspan="2">HP</th>
-                                        <td>{{ agent.base.hp }}</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>{{ agent.equipment.discTotal['hp-p'] }}%</td>
-                                        <td>{{ agent.equipment.discTotal['hp-v'] }}</td>
-                                        <td>{{ agent.total.hp }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="2">ATK</th>
-                                        <td>{{ agent.base.atk }}</td>
-                                        <td>{{ agent.equipment.wEngine.atk }}</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['atk-p'] }}%</td>
-                                        <td>{{ agent.equipment.discTotal['atk-v'] }}</td>
-                                        <td>{{ agent.total.atk }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="2">DEF</th>
-                                        <td>{{ agent.base.def }}</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>{{ agent.equipment.discTotal['def-p'] }}%</td>
-                                        <td>{{ agent.equipment.discTotal['def-v'] }}</td>
-                                        <td>{{ agent.total.def }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="2">Impact</th>
-                                        <td>{{ agent.base.imp }}</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>{{ agent.equipment.discTotal['imp-p'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.imp }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th rowspan="2">CRIT</th>
-                                        <th>Rate</th>
-                                        <td>{{ agent.base.critR }}%</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>{{ agent.equipment.discTotal['crit-r'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.critR }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>DMG%</th>
-                                        <td>{{ agent.base.critD }}%</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>{{ agent.equipment.discTotal['crit-d'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.critD }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th rowspan="2">ANOM</th>
-                                        <th>Mastery</th>
-                                        <td>{{ agent.base.anmB }}</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['anm-b'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.anmB }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Prof.</th>
-                                        <td>{{ agent.base.anmP }}</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>-</td>
-                                        <td>{{ agent.equipment.discTotal['anm-p'] }}</td>
-                                        <td>{{ agent.total.anmP }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th rowspan="2">PEN</th>
-                                        <th>Ratio</th>
-                                        <td>0%</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['pen-r'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.penR }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Value</th>
-                                        <td>0</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>{{ agent.equipment.discTotal['pen-v'] }}</td>
-                                        <td>{{ agent.total.penV }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="2">EN Regen</th>
-                                        <td>{{ agent.base.enReg }}</td>
-                                        <td>-</td>
-                                        <td>0</td>
-                                        <td>{{ agent.equipment.discTotal['en-reg'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.enReg }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th rowspan="5">DMG Bonus</th>
-                                        <th>Physical</th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['bonus-phy'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.bonusPhy }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Fire</th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['bonus-fire'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.bonusFire }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Ice</th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['bonus-ice'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.bonusIce }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Electric</th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['bonus-ele'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.bonusEle }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Ether</th>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>0%</td>
-                                        <td>{{ agent.equipment.discTotal['bonus-eth'] }}%</td>
-                                        <td>-</td>
-                                        <td>{{ agent.total.bonusEth }}%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="control">
+                        <div class="radio-group">
+                            Details<span><label><input type="radio" name="size" class="full">Full</label><label><input type="radio" name="size" class="mid">Mid</label><label><input type="radio" name="size" class="min">Min</label><label><input type="radio" name="size" class="close" checked>Close</label></span>
                         </div>
-                    </details>
-                    <section class="wrapper">
-                        <section class="basics">
-                            <h4>Agent</h4>
-                            <div>
-                                <p><label>Class <select v-model="agent.type"><option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option></select></label>
-                                    <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
-                                    <label>Name <select v-model="agent.charId" @change="agent.initAgent(agent.charId)"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label></p>
-                                <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span></p>
-                            </div>
-                            <h4>W-Engine</h4>
-                            <div>
-                                <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
-                                    <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
-                                    <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
-                                <p><span>Level 60</span> / <span>Promotion 5</span></p>
-                            </div>
-                        </section>
-                        <section class="driver">
-                            <h4>Driver</h4>
-                            <div>
-                                <div class="disc">
-                                    <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]"><input type="checkbox" name="disc" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
+                    </div>
+                    <section class="general">
+                        <table class="value-details">
+                            <colgroup>
+                                <col span="2">
+                                <col>
+                                <col span="2">
+                                <col span="2">
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="2" rowspan="2">Status Detail</th>
+                                    <th rowspan="2">Agent</th>
+                                    <th colspan="2">W-Engine</th>
+                                    <th colspan="2">Driver</th>
+                                    <th rowspan="2">Total</th>
+                                </tr>
+                                <tr>
+                                    <th>Base</th>
+                                    <th>Adv.</th>
+                                    <th>%</th>
+                                    <th>Val</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th colspan="2">HP</th>
+                                    <td>{{ agent.base.hp }}</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>{{ agent.equipment.discTotal['hp-p'] }}%</td>
+                                    <td>{{ agent.equipment.discTotal['hp-v'] }}</td>
+                                    <td>{{ agent.total.hp }}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">ATK</th>
+                                    <td>{{ agent.base.atk }}</td>
+                                    <td>{{ agent.equipment.wEngine.atk }}</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['atk-p'] }}%</td>
+                                    <td>{{ agent.equipment.discTotal['atk-v'] }}</td>
+                                    <td>{{ agent.total.atk }}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">DEF</th>
+                                    <td>{{ agent.base.def }}</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>{{ agent.equipment.discTotal['def-p'] }}%</td>
+                                    <td>{{ agent.equipment.discTotal['def-v'] }}</td>
+                                    <td>{{ agent.total.def }}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Impact</th>
+                                    <td>{{ agent.base.imp }}</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>{{ agent.equipment.discTotal['imp-p'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.imp }}</td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">CRIT</th>
+                                    <th>Rate</th>
+                                    <td>{{ agent.base.critR }}%</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>{{ agent.equipment.discTotal['crit-r'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.critR }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>DMG%</th>
+                                    <td>{{ agent.base.critD }}%</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>{{ agent.equipment.discTotal['crit-d'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.critD }}%</td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">ANOM</th>
+                                    <th>Build</th>
+                                    <td>{{ agent.base.anmB }}</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['anm-b'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.anmB }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Prof.</th>
+                                    <td>{{ agent.base.anmP }}</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>-</td>
+                                    <td>{{ agent.equipment.discTotal['anm-p'] }}</td>
+                                    <td>{{ agent.total.anmP }}</td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="2">PEN</th>
+                                    <th>Ratio</th>
+                                    <td>0%</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['pen-r'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.penR }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Value</th>
+                                    <td>0</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{ agent.equipment.discTotal['pen-v'] }}</td>
+                                    <td>{{ agent.total.penV }}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">EN Regen</th>
+                                    <td>{{ agent.base.enReg }}</td>
+                                    <td>-</td>
+                                    <td>0</td>
+                                    <td>{{ agent.equipment.discTotal['en-reg'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.enReg }}</td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="5">DMG Bonus</th>
+                                    <th>Physical</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['bonus-phy'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.bonusPhy }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Fire</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['bonus-fire'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.bonusFire }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Ice</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['bonus-ice'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.bonusIce }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Electric</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['bonus-ele'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.bonusEle }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Ether</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>0%</td>
+                                    <td>{{ agent.equipment.discTotal['bonus-eth'] }}%</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.bonusEth }}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section class="main">
+                        <div class="wrapper">
+                            <section class="basics">
+                                <h4>Agent</h4>
+                                <div>
+                                    <p><label>Class <select v-model="agent.type"><option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option></select></label>
+                                        <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
+                                        <label>Name <select v-model="agent.charId" @change="agent.initAgent(agent.charId)"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label></p>
+                                    <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span></p>
                                 </div>
-                                <h5>Set Effects</h5>
-                                <div class="data">
-                                    <table v-if="agent.equipment.discSet[0] != null">
-                                        <caption>1 : {{ discClass.data[agent.equipment.discSet[0]][2] }}</caption>
-                                        <tr>
-                                            <th>2-pieces</th>
-                                            <td>{{ define.display[discClass.data[agent.equipment.discSet[0]][3]] }}</td>
-                                            <td>+{{ discClass.data[agent.equipment.discSet[0]][4] }}%</td>
-                                        </tr>
-                                        <tr v-if="agent.equipment.discSet[2] == null">
-                                            <th>4-pieces</th>
-                                            <td colspan="2"></td>
-                                        </tr>
-                                    </table>
-                                    <table v-if="agent.equipment.discSet[1] != null">
-                                        <caption>2 : {{ discClass.data[agent.equipment.discSet[1]][2] }}</caption>
-                                        <tr>
-                                            <th>2-pieces</th>
-                                            <td>{{ define.display[discClass.data[agent.equipment.discSet[1]][3]] }}</td>
-                                            <td>+{{ discClass.data[agent.equipment.discSet[1]][4] }}%</td>
-                                        </tr>
-                                    </table>
-                                    <table v-if="agent.equipment.discSet[2] != null">
-                                        <caption>3 : {{ discClass.data[agent.equipment.discSet[2]][2] }}</caption>
-                                        <tr>
-                                            <th>2-pieces</th>
-                                            <td>{{ define.display[discClass.data[agent.equipment.discSet[2]][3]] }}</td>
-                                            <td>+{{ discClass.data[agent.equipment.discSet[2]][4] }}%</td>
-                                        </tr>
-                                    </table>
+                                <h4>W-Engine</h4>
+                                <div>
+                                    <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
+                                        <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
+                                        <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
+                                    <p><span>Level 60</span> / <span>Promotion 5</span></p>
                                 </div>
-                                <!--
-                                <div class="flex">
-                                    <fieldset v-for="i in agent.equipment.discPattern +2" :class="'disctype-' + agent.equipment.discSet[i - 1]">
-                                        <select v-model="agent.equipment.discSet[i - 1]" @change="agent.calcDiscTotal()">
-                                            <option v-for="(data, key) in discClass.data" :value="key">{{ data[2] }}</option>
-                                        </select>
-                                    </fieldset>
-                                </div>-->
-                                <h5>Disc Status</h5>
-                                <div class="flex">
-                                    <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
-                                        <legend>Partition {{ key + 1 }}</legend>
-                                        <p v-if="key < 3"><span class="hidden-mobile">Main : </span>{{ define.display[discClass.mainTable[key]] }} +{{ discClass.getMainStat(discClass.mainTable[key], disc.level) }}</p>
-                                        <p v-else><span class="hidden-mobile">Main : </span><select v-model="agent.equipment.disc[key].main" @change="agent.calcDiscTotal()"><option v-for="(name, key) in discClass.mainTable[key]" :value="name">{{ define.display[name] }}</option></select> +{{ discClass.getMainStat(agent.equipment.disc[key].main, disc.level) }}%</p>
-                                        <ul>
-                                            <li v-for="i in 4">
-                                                <select v-model="disc.sub[i-1].type" @change="agent.calcDiscTotal()">
-                                                    <option v-for="(sub, key) in discClass.sub" :value="key">{{ define.display[key] }}</option>
-                                                </select>
-                                                <select v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()">
-                                                    <option v-for="j in 6" :value="j - 1">{{ j - 1 }}</option>
-                                                </select>
-                                                +{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}
-                                            </li>
-                                        </ul>
-                                    </fieldset>
+                            </section>
+                            <section class="driver">
+                                <h4>Driver</h4>
+                                <div>
+                                    <div class="disc">
+                                        <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]"><input type="checkbox" name="disc" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
+                                    </div>
+                                    <h5>Set Effects</h5>
+                                    <div class="data">
+                                        <table v-if="agent.equipment.discSet[0] != null">
+                                            <caption>1 : {{ discClass.data[agent.equipment.discSet[0]][2] }}</caption>
+                                            <tr>
+                                                <th>2-pieces</th>
+                                                <td>{{ define.display[discClass.data[agent.equipment.discSet[0]][3]] }}</td>
+                                                <td>+{{ discClass.data[agent.equipment.discSet[0]][4] }}%</td>
+                                            </tr>
+                                            <tr v-if="agent.equipment.discSet[2] == null">
+                                                <th>4-pieces</th>
+                                                <td colspan="2"></td>
+                                            </tr>
+                                        </table>
+                                        <table v-if="agent.equipment.discSet[1] != null">
+                                            <caption>2 : {{ discClass.data[agent.equipment.discSet[1]][2] }}</caption>
+                                            <tr>
+                                                <th>2-pieces</th>
+                                                <td>{{ define.display[discClass.data[agent.equipment.discSet[1]][3]] }}</td>
+                                                <td>+{{ discClass.data[agent.equipment.discSet[1]][4] }}%</td>
+                                            </tr>
+                                        </table>
+                                        <table v-if="agent.equipment.discSet[2] != null">
+                                            <caption>3 : {{ discClass.data[agent.equipment.discSet[2]][2] }}</caption>
+                                            <tr>
+                                                <th>2-pieces</th>
+                                                <td>{{ define.display[discClass.data[agent.equipment.discSet[2]][3]] }}</td>
+                                                <td>+{{ discClass.data[agent.equipment.discSet[2]][4] }}%</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!--
+                                    <div class="flex">
+                                        <fieldset v-for="i in agent.equipment.discPattern +2" :class="'disctype-' + agent.equipment.discSet[i - 1]">
+                                            <select v-model="agent.equipment.discSet[i - 1]" @change="agent.calcDiscTotal()">
+                                                <option v-for="(data, key) in discClass.data" :value="key">{{ data[2] }}</option>
+                                            </select>
+                                        </fieldset>
+                                    </div>-->
+                                    <h5>Disc Status</h5>
+                                    <div class="flex" data-ver="2">
+                                        <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
+                                            <legend>Partition {{ key + 1 }}</legend>
+                                            <table class="detail">
+                                                <tr>
+                                                    <th>Main</th>
+                                                    <td class="name">{{ define.display[disc.main] }}</td>
+                                                    <td class="level">&nbsp;</td>
+                                                    <td class="val">+{{ discClass.getMainStat(disc.main, disc.level) }}</td>
+                                                    <td class="input">&nbsp;</td>
+                                                </tr>
+                                                <tr v-for="i in 4">
+                                                    <th>Sub {{i}}</th>
+                                                    <td>{{ define.display[disc.sub[i-1].type] }}</td>
+                                                    <td>{{ disc.sub[i-1].level }}</td>
+                                                    <td>+{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}</td>
+                                                    <td><input type="range" max="5" min="0" v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()"></td>
+                                                </tr>
+                                            </table>
+                                        </fieldset>
+                                    </div>
+                                    <!--
+                                    <h5>Disc Status</h5>
+                                    <div class="flex" data-ver="1">
+                                        <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
+                                            <legend>Partition {{ key + 1 }}</legend>
+                                            <p v-if="key < 3"><span class="hidden-mobile">Main : </span>{{ define.display[discClass.mainTable[key]] }} +{{ discClass.getMainStat(discClass.mainTable[key], disc.level) }}</p>
+                                            <p v-else><span class="hidden-mobile">Main : </span><select v-model="agent.equipment.disc[key].main" @change="agent.calcDiscTotal()"><option v-for="(name, key) in discClass.mainTable[key]" :value="name">{{ define.display[name] }}</option></select> +{{ discClass.getMainStat(agent.equipment.disc[key].main, disc.level) }}%</p>
+                                            <ul>
+                                                <li v-for="i in 4">
+                                                    <select v-model="disc.sub[i-1].type" @change="agent.calcDiscTotal()">
+                                                        <option v-for="(sub, key) in discClass.sub" :value="key">{{ define.display[key] }}</option>
+                                                    </select>
+                                                    <select v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()">
+                                                        <option v-for="j in 6" :value="j - 1">{{ j - 1 }}</option>
+                                                    </select>
+                                                    +{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}
+                                                </li>
+                                            </ul>
+                                        </fieldset>
+                                    </div>
+                                    -->
                                 </div>
-                            </div>
-                        </section>
-                        <section class="skill">
+                            </section>
+                            <section class="skill">
                             <h4>Skill Damage</h4>
                             <div>
                                 <div v-for="val,key in define.skillType" class="data">
@@ -365,7 +391,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </section>
+                            </section>
+                        </div>
                     </section>
                 </section>
                 <div>
