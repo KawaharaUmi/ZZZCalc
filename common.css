@@ -125,23 +125,25 @@ section.pattern {
             }
 
             & p {
-                line-height: 8pt;
-                font-size: 9pt;
-                text-shadow: 1px 1px #000;
+                line-height: 4pt;
+                font-size: 8pt;
+                /*text-shadow: 1px 1px #000;*/
 
                 & b {
-                    line-height: 20pt;
-                    background-clip: text;
-                    font-size: 20pt;
+                    display: inline-block;
+                    padding-right: 5px;
+                    line-height: 24pt;
+                    font-size: 26pt;
                     font-weight: 700;
                     font-style: italic;
+                    color: transparent;
                 }
 
-                & b.physical    { }
-                & b.fire        { }
-                & b.ice         { }
-                & b.electric    { }
-                & b.ether       { }
+                & b.Physical    { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
+                & b.Fire        { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
+                & b.Ice         { background: linear-gradient(175deg, rgb(206, 233, 255) 40%, rgb(74, 183, 255) 90%); background-clip: text; }
+                & b.Electric    { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
+                & b.Ether       { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
             } 
 
             & ul.equipment {
