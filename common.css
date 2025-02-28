@@ -209,6 +209,7 @@ section.pattern {
         & h3 {
             user-select: none;
             z-index: 0;
+            overflow: visible;
             margin: 0;
             width: 75px;
             height: 46px;
@@ -289,6 +290,7 @@ section.pattern {
 
     & div.control {
         margin-top: 8px;
+        text-align: right;
     }
     
     & div.control:has(input.close:checked)~section.general {
