@@ -134,16 +134,17 @@ section.pattern {
                     padding-right: 5px;
                     line-height: 24pt;
                     font-size: 26pt;
-                    font-weight: 700;
+                    font-weight: 720;
                     font-style: italic;
                     color: transparent;
+                    -webkit-text-stroke: .5px #111;
                 }
 
-                & b.Physical    { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
-                & b.Fire        { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
-                & b.Ice         { background: linear-gradient(175deg, rgb(206, 233, 255) 40%, rgb(74, 183, 255) 90%); background-clip: text; }
-                & b.Electric    { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
-                & b.Ether       { background: linear-gradient(175deg, rgba(255, 208, 0) 30%, rgb(255, 145, 0) 90%); background-clip: text; }
+                & b.Physical    { background: linear-gradient(177deg, #efd500 30%, #fd9800 90%); background-clip: text; }
+                & b.Fire        { background: linear-gradient(177deg, #ff7e1b 30%, #ef1200 90%); background-clip: text; }
+                & b.Ice         { background: linear-gradient(177deg, #87faf7 40%, #00ced5 90%); background-clip: text; }
+                & b.Electric    { background: linear-gradient(177deg, #27e6ff 40%, #007eff 90%); background-clip: text; }
+                & b.Ether       { background: linear-gradient(177deg, #ff1729 40%, #a551ca 65%, #2e73ff 90%); background-clip: text;}
             } 
 
             & ul.equipment {
