@@ -233,7 +233,7 @@
                                         <tr>
                                             <th>Class</th><td>{{ agent.type }}</td>
                                             <th>Rank</th><td>{{ agent.rank }}</td>
-                                            <th>Attribute</th><td><img :src="'./img/icon_attribute_' + agent.attribute.primary + '.png'" width="16pt" height="16pt">{{ agent.attribute.secondary ? agent.attribute.secondary : agent.attribute.primary }}</td>
+                                            <th>Attribute</th><td><img :src="'./img/icon_attribute_' + agent.attribute.primary.toLowerCase() + '.png'" width="16pt" height="16pt">{{ agent.attribute.secondary ? agent.attribute.secondary : agent.attribute.primary }}</td>
                                         </tr>
                                     </table>
                                     <h5>Basics Setting</h5>
