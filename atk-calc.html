@@ -228,10 +228,52 @@
                             <section class="basics">
                                 <h4>Agent</h4>
                                 <div>
-                                    <p><label>Class <select v-model="agent.type"><option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option></select></label>
-                                        <label>Rank <select v-model="agent.rank"><option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option></select></label>
-                                        <label>Name <select v-model="agent.charId" @change="agent.initAgent(agent.charId)"><option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.type && val[2] == agent.rank)" :value="Number(data[0])">{{ data[6] }}</option></select></label></p>
-                                    <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span></p>
+                                    <table>
+                                        <caption>Name : {{ agent.name.jp }}</caption>
+                                        <tr>
+                                            <th>Class</th><td>{{ agent.type }}</td>
+                                            <th>Rank</th><td>{{ agent.rank }}</td>
+                                            <th>Attribute</th><td><img :src="'./img/icon_attribute_' + agent.attribute.primary + '.png'" width="16pt" height="16pt">{{ agent.attribute.secondary ? agent.attribute.secondary : agent.attribute.primary }}</td>
+                                        </tr>
+                                    </table>
+                                    <h5>Basics Setting</h5>
+                                    <table>
+                                        
+                                    </table>
+                                    <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span>
+                                        <input type="range" min="1" max="60" v-model="agent.level" disabled></p>
+                                    <p>Mindscape : {{ agent.mindscape }}
+                                        <input type="range" min="0" max="6" v-model="agent.mindscape"></p>
+                                    <p>Core Passive : {{ agent.skills.core.level }} / Effects : ATK(Base) + 
+                                        <input type="range" min="0" max="6" v-model="agent.skills.core.level"></p>
+                                    <p>Skill Level (Batch setting) : 
+                                        <input type="range" min="1" max="12"></p>
+                                    <details>
+                                        <summary><h5>Change Agent</h5></summary>
+                                        <fieldset>
+                                            <legend>Filter</legend>
+                                            <div class="radio-group">
+                                                Class<span>
+                                                    <label v-for="(val, key) in agentClass.types">
+                                                        <input type="radio" name="agent-class" v-model="agent.selector.type" :value="val">{{ val }}
+                                                    </label>
+                                                </span>
+                                            </div>
+                                            <div class="radio-group">
+                                                Rank <span>
+                                                    <label v-for="(val, key) in agentClass.ranks">
+                                                        <input type="radio" name="agent-rank" v-model="agent.selector.rank" :value="val">{{ val }}
+                                                    </label>
+                                                </span>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend>Agents</legend>
+                                            <label v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.selector.type && val[2] == agent.selector.rank)">
+                                                <button @click="agent.initAgent(data[0])" :name="'agent-list-' + agent.selector.type + '-' + agent.selector.rank">{{ data[6] }}
+                                            </label>
+                                        </fieldset>
+                                    </details>
                                 </div>
                                 <h4>W-Engine</h4>
                                 <div>
@@ -254,7 +296,7 @@
                                             <tr>
                                                 <th>2-pieces</th>
                                                 <td>{{ define.display[discClass.data[agent.equipment.discSet[0]][3]] }}</td>
-                                                <td>+{{ discClass.data[agent.equipment.discSet[0]][4] }}%</td>
+                                                <td>+{{ discClass.data[agent.equipment.discSet[0]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[0]][3]) }}</td>
                                             </tr>
                                             <tr v-if="agent.equipment.discSet[2] == null">
                                                 <th>4-pieces</th>
@@ -266,7 +308,7 @@
                                             <tr>
                                                 <th>2-pieces</th>
                                                 <td>{{ define.display[discClass.data[agent.equipment.discSet[1]][3]] }}</td>
-                                                <td>+{{ discClass.data[agent.equipment.discSet[1]][4] }}%</td>
+                                                <td>+{{ discClass.data[agent.equipment.discSet[1]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[1]][3]) }}</td>
                                             </tr>
                                         </table>
                                         <table v-if="agent.equipment.discSet[2] != null">
@@ -274,7 +316,7 @@
                                             <tr>
                                                 <th>2-pieces</th>
                                                 <td>{{ define.display[discClass.data[agent.equipment.discSet[2]][3]] }}</td>
-                                                <td>+{{ discClass.data[agent.equipment.discSet[2]][4] }}%</td>
+                                                <td>+{{ discClass.data[agent.equipment.discSet[2]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[2]][3]) }}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -295,14 +337,14 @@
                                                     <th>Main</th>
                                                     <td class="name">{{ define.display[disc.main] }}</td>
                                                     <td class="level">&nbsp;</td>
-                                                    <td class="val">+{{ discClass.getMainStat(disc.main, disc.level) }}</td>
+                                                    <td class="val">+{{ discClass.getMainStat(disc.main, disc.level) }}{{ displayUnit(disc.main) }}</td>
                                                     <td class="input">&nbsp;</td>
                                                 </tr>
                                                 <tr v-for="i in 4">
                                                     <th>Sub {{i}}</th>
                                                     <td>{{ define.display[disc.sub[i-1].type] }}</td>
                                                     <td>{{ disc.sub[i-1].level }}</td>
-                                                    <td>+{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}</td>
+                                                    <td>+{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}{{ displayUnit(disc.sub[i-1].type) }}</td>
                                                     <td><input type="range" max="5" min="0" v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()"></td>
                                                 </tr>
                                             </table>
@@ -398,10 +440,10 @@
                 <div>
                     <h3>Add Data</h3>
                     <select v-model="selector.type">
-                        <option v-for="(val, key) in agentClass.type" :value="val">{{ val }}</option>
+                        <option v-for="(val, key) in agentClass.types" :value="val">{{ val }}</option>
                     </select>
                     <select v-model="selector.rank">
-                        <option v-for="(val, key) in agentClass.rank" :value="val">{{ val }}</option>
+                        <option v-for="(val, key) in agentClass.ranks" :value="val">{{ val }}</option>
                     </select>
                     <select v-model="selector.charId">
                         <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
@@ -456,6 +498,9 @@
                     deletePattern(key) {
                         this.data.splice(key, 1)
                     },
+                    displayUnit(text) {
+                        if(text != 'anm-p' && text.at(-1) != 'v') return '%'
+                    },
                     setDriver(tgtObj, discId, obj) {
                         const discSet = tgtObj.equipment.discSet
 
@@ -473,7 +518,7 @@
                             return true
                         }
                     }
-                }
+                },
             }).mount('main')
 
         </script>
