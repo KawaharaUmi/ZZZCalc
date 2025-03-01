@@ -23,11 +23,11 @@
     <body>
         <main>
             <section>
-                <section v-for="(agent, key) in data" class="pattern" :id="'pattern-' + key">
+                <section v-for="(agent, patternNo) in data" class="pattern" :id="'pattern-' + patternNo">
                     <header>
-                        <h3 class="hidden-mobile">{{ (String(key + 1).length == 1) ? '0' + (key + 1) : key + 1 }}</h3>
+                        <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
                         <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">
-                            <p>Expected ATK<br><b :class="'number '+ agent.attribute.primary">{{ expectedValue(key) }}</b><span class="hidden-mobile"> (Amplified:{{ amplificationRatio(key) }}) / Ratio to standard:{{ calcRatioToStd(key) }}</span></p>
+                            <p>Expected ATK<br><b :class="'number '+ agent.attribute.primary">{{ expectedValue(patternNo) }}</b><span class="hidden-mobile"> (Amplified:{{ amplificationRatio(patternNo) }}) / Ratio to standard:{{ calcRatioToStd(patternNo) }}</span></p>
                             <ul class="equipment">
                                 <li class="w-engine"><img :src="'./img/icon_wengine_' + agent.equipment.wEngine.id + '.webp'" width="40px" height="40px"></li>
                                 <li v-for="key in agent.equipment.discPattern + 2" :class="'disc set'+ key"><img v-if="agent.equipment.discSet[key - 1] !== null" :src="'./img/icon_disc_' + agent.equipment.discSet[key - 1] + '.webp'" width="40px" height="40px"></li>
@@ -36,15 +36,15 @@
                         <details class="control">
                             <summary>⚙️</summary>
                             <ul>
-                                <li><button @click="setStd(key)">Set to standard</button></li>
-                                <li><button @click="addPattern(key)">Duplication</button></li>
-                                <li><button title="Delete" @click="deletePattern(key)">Delete</button></li>
+                                <li><button @click="setStd(patternNo)">Set to standard</button></li>
+                                <li><button @click="addPattern(patternNo)">Duplication</button></li>
+                                <li><button title="Delete" @click="deletePattern(patternNo)">Delete</button></li>
                             </ul>
                         </details>
                     </header>
                     <div class="control">
                         <div class="radio-group">
-                            Details<span><label><input type="radio" name="size" class="full">Full</label><label><input type="radio" name="size" class="mid">Mid</label><label><input type="radio" name="size" class="min">Min</label><label><input type="radio" name="size" class="close" checked>Close</label></span>
+                            Details<span><label><input type="radio" :name="'p'+ patternNo + '-size'" class="full">Full</label><label><input type="radio" :name="'p'+ patternNo + '-size'" class="mid">Mid</label><label><input type="radio" :name="'p'+ patternNo + '-size'" class="min">Min</label><label><input type="radio" :name="'p'+ patternNo + '-size'" class="close" checked>Close</label></span>
                         </div>
                     </div>
                     <section class="general">
@@ -227,15 +227,48 @@
                         <div class="wrapper">
                             <section class="basics">
                                 <h4>Agent</h4>
+                                <p>Name : {{ agent.name.jp }}</p>
                                 <div>
-                                    <table>
-                                        <caption>Name : {{ agent.name.jp }}</caption>
+                                    <table class="basic-status">
                                         <tr>
                                             <th>Class</th><td>{{ agent.type }}</td>
                                             <th>Rank</th><td>{{ agent.rank }}</td>
-                                            <th>Attribute</th><td><img :src="'./img/icon_attribute_' + agent.attribute.primary.toLowerCase() + '.png'" width="16pt" height="16pt">{{ agent.attribute.secondary ? agent.attribute.secondary : agent.attribute.primary }}</td>
+                                            <th>Attr.</th><td><img :src="'./img/icon_attribute_' + agent.attribute.primary.toLowerCase() + '.png'" width="16pt" height="16pt">{{ agent.attribute.secondary ? agent.attribute.secondary : agent.attribute.primary }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>HP</th><td>{{ agent.base.hp }}</td>
+                                            <th>ATK</th><td>{{ agent.base.atk }}</td>
+                                            <th>DEF</th><td>{{ agent.base.def }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Impact</th><td>{{ agent.base.imp }}</td>
+                                            <th>ANOM Build.</th><td>{{ agent.base.anmB }}</td>
+                                            <th>ANOM Prof.</th><td>{{ agent.base.anmP }}</td>
                                         </tr>
                                     </table>
+                                    <details class="change-agent" open>
+                                        <summary><h5>Change Agent</h5></summary>
+                                        <fieldset>
+                                            <legend>Filter</legend>
+                                            <div class="radio-group">
+                                                Class<span>
+                                                    <label v-for="(val, key) in agentClass.types">
+                                                        <input type="radio" :name="'p'+ patternNo + 'agent-class'" v-model="agent.selector.type" :value="val">{{ val }}
+                                                    </label>
+                                                </span>
+                                            </div>
+                                            <div class="radio-group">
+                                                Rank<span>
+                                                    <label v-for="(val, key) in agentClass.ranks">
+                                                        <input type="radio" :name="'p'+ patternNo + 'agent-rank'" v-model="agent.selector.rank" :value="val">{{ val }}
+                                                    </label>
+                                                </span>
+                                            </div>
+                                        </fieldset>
+                                        <div class="flex">
+                                            <button @click="agent.initAgent(data[0])" v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.selector.type && val[2] == agent.selector.rank)" :class="'agent-' + data[0] + (data[0] == agent.charId ? ' selected' : '')">{{ data[6] }}</button>
+                                        </div>
+                                    </details>
                                     <h5>Basics Setting</h5>
                                     <table>
                                         
@@ -248,32 +281,6 @@
                                         <input type="range" min="0" max="6" v-model="agent.skills.core.level"></p>
                                     <p>Skill Level (Batch setting) : 
                                         <input type="range" min="1" max="12"></p>
-                                    <details>
-                                        <summary><h5>Change Agent</h5></summary>
-                                        <fieldset>
-                                            <legend>Filter</legend>
-                                            <div class="radio-group">
-                                                Class<span>
-                                                    <label v-for="(val, key) in agentClass.types">
-                                                        <input type="radio" name="agent-class" v-model="agent.selector.type" :value="val">{{ val }}
-                                                    </label>
-                                                </span>
-                                            </div>
-                                            <div class="radio-group">
-                                                Rank <span>
-                                                    <label v-for="(val, key) in agentClass.ranks">
-                                                        <input type="radio" name="agent-rank" v-model="agent.selector.rank" :value="val">{{ val }}
-                                                    </label>
-                                                </span>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset>
-                                            <legend>Agents</legend>
-                                            <label v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.selector.type && val[2] == agent.selector.rank)">
-                                                <button @click="agent.initAgent(data[0])" :name="'agent-list-' + agent.selector.type + '-' + agent.selector.rank">{{ data[6] }}
-                                            </label>
-                                        </fieldset>
-                                    </details>
                                 </div>
                                 <h4>W-Engine</h4>
                                 <div>
@@ -287,7 +294,7 @@
                                 <h4>Driver</h4>
                                 <div>
                                     <div class="disc">
-                                        <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]"><input type="checkbox" name="disc" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
+                                        <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]"><input type="checkbox" :name="'p'+ patternNo + '-disc'" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
                                     </div>
                                     <h5>Set Effects</h5>
                                     <div class="data">

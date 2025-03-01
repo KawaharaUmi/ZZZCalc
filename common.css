@@ -75,7 +75,11 @@ table tr td {
 }
 
 fieldset {
+    overflow: hidden;
     margin-top: 10px;
+    border-radius: 10px;
+    border: solid 1px #333;
+    padding: 0 5px 5px 10px;
     
     & legend {
         padding: 0 5px;
@@ -148,6 +152,7 @@ div.radio-group {
     font-size: 10pt;
     font-weight: 600;
     color: #fff;
+    white-space: nowrap;
     & span {
         display: inline-block;
         margin: 0 0 0 5px;
@@ -429,6 +434,93 @@ section.pattern {
             }
         }
 
+        & section.basics {
+            & table.basic-status {
+                border-collapse: collapse;
+                & th, td {
+                    border: solid 1px #333;
+                    line-height: 12pt;
+                    font-size: 12pt;
+                }
+                & th {
+                    width: 13%;
+                    height: 2em;
+                    padding: 3px 8px;
+                    background: #333;
+                }
+                & td {
+                    width: 15em;
+                    padding: 3px 5px;
+                    white-space: nowrap;
+                    & img {
+                        vertical-align: bottom;
+                    }
+                }
+            }
+            & div.flex {
+                justify-content: left;
+                gap: 4px;
+                margin-top: 10px;
+            }
+            & button {
+                overflow: hidden;
+                margin: 0;
+                width: calc(20% - 4px);
+                height: 45px;
+                border-radius: 10px;
+                border: solid 3px #000;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position-x: -30px;
+                background-color: rgba(0, 0, 0, .5);
+                background-blend-mode: darken;
+                text-indent: -9999px;
+                line-height: 9pt;
+                font-size: 9pt;
+
+                @media screen and (max-width: 480px) {
+                    width: calc(33% - 2px);
+                }
+            }
+            & button.selected {
+                border: solid 3px #3c3;
+                background-blend-mode: normal;
+            }
+            & button:hover, button:active {
+                background-blend-mode: normal;
+            }
+            & .agent-0 { background-image: url(./img/agent-thumb-0.png) }
+            & .agent-1 { background-image: url(./img/agent-thumb-1.png) }
+            & .agent-2 { background-image: url(./img/agent-thumb-2.png) }
+            & .agent-3 { background-image: url(./img/agent-thumb-3.png) }
+            & .agent-4 { background-image: url(./img/agent-thumb-4.png) }
+            & .agent-5 { background-image: url(./img/agent-thumb-5.png) }
+            & .agent-6 { background-image: url(./img/agent-thumb-6.png) }
+            & .agent-7 { background-image: url(./img/agent-thumb-7.png) }
+            & .agent-8 { background-image: url(./img/agent-thumb-8.png) }
+            & .agent-9 { background-image: url(./img/agent-thumb-9.png) }
+            & .agent-10 { background-image: url(./img/agent-thumb-10.png) }
+            & .agent-11 { background-image: url(./img/agent-thumb-11.png) }
+            & .agent-12 { background-image: url(./img/agent-thumb-12.png) }
+            & .agent-13 { background-image: url(./img/agent-thumb-13.png) }
+            & .agent-14 { background-image: url(./img/agent-thumb-14.png) }
+            & .agent-15 { background-image: url(./img/agent-thumb-15.png) }
+            & .agent-16 { background-image: url(./img/agent-thumb-16.png) }
+            & .agent-17 { background-image: url(./img/agent-thumb-17.png) }
+            & .agent-18 { background-image: url(./img/agent-thumb-18.png) }
+            & .agent-19 { background-image: url(./img/agent-thumb-19.png) }
+            & .agent-20 { background-image: url(./img/agent-thumb-20.png) }
+            & .agent-21 { background-image: url(./img/agent-thumb-21.png) }
+            & .agent-22 { background-image: url(./img/agent-thumb-22.png) }
+            & .agent-23 { background-image: url(./img/agent-thumb-23.png) }
+            & .agent-24 { background-image: url(./img/agent-thumb-24.png) }
+            & .agent-25 { background-image: url(./img/agent-thumb-25.png) }
+            & .agent-26 { background-image: url(./img/agent-thumb-26.png) }
+            & .agent-27 { background-image: url(./img/agent-thumb-27.png) }
+            & .agent-28 { background-image: url(./img/agent-thumb-28.png) }
+            & .agent-29 { background-image: url(./img/agent-thumb-29.png) }
+        }
+
         & section.driver {
             & div.disc {
                 display: flex;
@@ -548,9 +640,6 @@ section.driver {
 
     & [data-ver="1"] fieldset.disc {
         width: 33%;
-        border-radius: 10px;
-        border: solid 1px #333;
-        padding: 5px;
     
         @media screen and (max-width: 480px) {
             width: calc(50% - 3px);
@@ -559,9 +648,6 @@ section.driver {
 
     & [data-ver="2"] fieldset.disc {
         width: calc(50% - 4px);
-        border-radius: 10px;
-        border: solid 1px #333;
-        padding: 0 5px 5px 10px;
     
         @media screen and (max-width: 480px) {
             width: 100%;
