@@ -22,7 +22,7 @@
     </head>
     <body>
         <main>
-            <section>
+            <section :data-update="this.count">
                 <section v-for="(agent, patternNo) in data" class="pattern" :id="'pattern-' + patternNo">
                     <header>
                         <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
@@ -412,6 +412,7 @@
                                                 <td><b>{{ agent.calcDmg(data, key, 'expected') }}</b></td>
                                             </tr>
                                         </tbody>
+                                        <!--
                                         <tfoot>
                                             <tr v-if="data.combo == 'TRUE'">
                                                 <th>TTL</th>
@@ -422,6 +423,7 @@
                                                 <td>3750</td>
                                             </tr>
                                         </tfoot>
+                                        -->
                                     </table>
                                 </div>
                             </div>
@@ -448,20 +450,41 @@
                         </div>
                     </section>
                 </section>
-                <div>
-                    <h3>Add Data</h3>
-                    <select v-model="selector.type">
-                        <option v-for="(val, key) in agentClass.types" :value="val">{{ val }}</option>
-                    </select>
-                    <select v-model="selector.rank">
-                        <option v-for="(val, key) in agentClass.ranks" :value="val">{{ val }}</option>
-                    </select>
-                    <select v-model="selector.charId">
-                        <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
-                    </select>
-                    <button @click="addPattern()">Add</button>
-                </div>
             </section>
+            <footer>
+                <h2>General</h2>
+                <h3>View</h3>
+                <button>Minimize All</button>
+                <h4>Evaluation Score</h3>
+                <label><input type="radio" name="expectValueDisp">Expected ATK</label>
+                <label><input type="radio" name="expectValueDisp">Expected Damage</label>
+                <h3>Active Buffs</h3>
+                ATK% <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.rate" @change="forceUpdate()">% 
+                ATK <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.increase" @change="forceUpdate()">
+                <h3>Enemy Defense</h3>
+                Break Rate <input type="number" size="4" min="100" v-model="agentClass.enemyStatus.breakRate" @change="forceUpdate()">% / 
+                Defense Coefficient <input type="number" size="4" min="0" v-model="agentClass.enemyStatus.enemyDef" @change="forceUpdate()">%<br>
+                Weak 
+                <select v-model="agentClass.enemyStatus.weak.attribute" @change="forceUpdate()">
+                    <option v-for="val of define.attribute" :value="val">{{val}}</option>
+                </select>
+                <input type="number" size="4" min="0" v-model="agentClass.enemyStatus.weak.rate" @change="forceUpdate()"> 
+                Resist 
+                <select v-model="agentClass.enemyStatus.resist.attribute" @change="forceUpdate()">
+                    <option v-for="val of define.attribute" :value="val">{{val}}</option>
+                </select><input type="number" size="4" min="0" v-model="agentClass.enemyStatus.resist.rate" @change="forceUpdate()">%
+                <h3>Add Pattern</h3>
+                <select v-model="selector.type">
+                    <option v-for="(val, key) in agentClass.types" :value="val">{{ val }}</option>
+                </select>
+                <select v-model="selector.rank">
+                    <option v-for="(val, key) in agentClass.ranks" :value="val">{{ val }}</option>
+                </select>
+                <select v-model="selector.charId">
+                    <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
+                </select>
+                <button @click="addPattern()">Add</button>
+            </footer>
         </main>
         <script type="module">
 
@@ -470,6 +493,7 @@
             const calcurator = createApp({
                 data() {
                     return {
+                        count: 0,
                         define: define,
                         agentClass: agentClass,
                         wEngineClass: wEngineClass,
@@ -553,8 +577,11 @@
                             tgtAgent.calcDiscTotal()
                             return true
                         }
+                    },
+                    forceUpdate() {
+                        this.count++
                     }
-                },
+                }
             }).mount('main')
 
         </script>
