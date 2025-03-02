@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>vue test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                  "vue": "https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.js",
+                  "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js"
+                },
+                "scopes": {}
+            }
+        </script>
+    </head>
+    <body>
+        <main>
+        </main>
+        <template id="app">
+            <section>
+                <h1>Fragment Test</h1>
+                <p><input type="number" v-model="count">{{count}}</p>
+                <button @click="reset">Destroy</button>
+            </section>
+        </template>
+        <script type="module">
+
+            import { createApp, ref } from 'vue'
+
+            const appBlock = document.querySelector('main')
+            const appNodes = appBlock.children
+            const template = document.querySelector('template#app')
+            const appGroup = new Array()
+
+            addApp()
+            addApp()
+            addApp()
+            
+            console.log(appGroup)
+
+            //appGroup[2].unmount()
+            //appNodes[2].remove()
+
+            console.log(appGroup)
+            
+            function addApp() {
+                appBlock.appendChild(template.content.cloneNode(true))
+                const nodeId = 'container-' + (appNodes.length - 1)
+                appNodes[appNodes.length-1].id = nodeId
+                appGroup.push(createApp({
+                    data() {
+                        return {
+                            count: 0
+                        }
+                    },
+                    methods: {
+                        reset() {
+                            this.count = 0
+                        },
+                        destroy() {
+                            this.unmount()
+                        }
+                    }
+                }).mount('#' + nodeId))
+                return appNodes.length
+            }
+        </script>
+    </body>
+</html>

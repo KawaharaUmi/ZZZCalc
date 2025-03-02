@@ -236,8 +236,8 @@
                         <div class="wrapper">
                             <section class="basics">
                                 <h4>Agent</h4>
-                                <p>Name : {{ agent.name.jp }}</p>
                                 <div>
+                                    <p>Name : {{ agent.name.jp }}</p>
                                     <table class="basic-status">
                                         <tr>
                                             <th>Class</th><td>{{ agent.type }}</td>
@@ -255,7 +255,7 @@
                                             <th>ANOM Prof.</th><td>{{ agent.base.anmP }}</td>
                                         </tr>
                                     </table>
-                                    <details class="change-agent" open>
+                                    <details class="change-agent">
                                         <summary><h5>Change Agent</h5></summary>
                                         <fieldset>
                                             <legend>Filter</legend>
@@ -282,10 +282,10 @@
                                     <table>
                                         
                                     </table>
-                                    <p><span>Level {{ agent.level }}</span> / <span>Promotion {{ agent.promotion }}</span>
+                                    <p><span>Level : {{ agent.level }}</span> / <span>Promotion : {{ agent.promotion }}</span>
                                         <input type="range" min="1" max="60" v-model="agent.level" disabled></p>
                                     <p>Mindscape : {{ agent.mindscape }}
-                                        <input type="range" min="0" max="6" v-model="agent.mindscape"></p>
+                                        <input type="range" min="0" max="6" v-model="agent.mindscape" disabled></p>
                                     <p>Core Passive : {{ agent.skills.core.level }} / Effects : ATK(Base) + 
                                         <input type="range" min="0" max="6" v-model="agent.skills.core.level" @change="agent.calcCoreSkillEffect()"></p>
                                     <p>Skill Level (Batch setting) : 
@@ -293,10 +293,26 @@
                                 </div>
                                 <h4>W-Engine</h4>
                                 <div>
+                                    <p>Name : {{ agent.equipment.wEngine.name }}</p>
+                                    <table class="basic-status">
+                                        <tr>
+                                            <th>Class</th><td>{{ agent.equipment.wEngine.type }}</td>
+                                            <th>Rank</th><td>{{ agent.equipment.wEngine.rank }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ATK</th><td>{{ agent.equipment.wEngine.atk }}</td>
+                                            <th>Adv.</th><td>{{ define.display[Object.entries(agent.equipment.wEngine.advSt).find(obj => obj != 0)[0]] }} +{{ Object.entries(agent.equipment.wEngine.advSt).find(obj => obj != 0)[1] }}</td>
+                                        </tr>
+                                    </table>
+                                    <p><span>Level : {{ agent.equipment.wEngine.level }}</span> / <span>Promotion : {{ agent.equipment.wEngine.promotion }}</span>
+                                        <input type="range" min="0" max="60" v-model="agent.equipment.wEngine.level" disabled></p>
+                                    <p>Upgrade : {{ agent.equipment.wEngine.grade }}
+                                        <input type="range" min="1" max="5" v-model="agent.equipment.wEngine.grade"></p>
                                     <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
                                         <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
                                         <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
                                     <p><span>Level 60</span> / <span>Promotion 5</span></p>
+                                    
                                 </div>
                             </section>
                             <section class="driver">
