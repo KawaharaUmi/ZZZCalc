@@ -405,7 +405,7 @@
                                             <tr v-for="param, key in data.params">
                                                 <th v-if="data.group.secondary == 'charge'">{{ 'Lv.' + (key + 1) }}</th>
                                                 <th v-else>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
-                                                <td><img :src="'./img/icon_type_' + param.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute + '.png'" width="16px" height="16px"></td>
+                                                <td><img :src="'./img/icon_type_' + param.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute.toLowerCase() + '.png'" width="16px" height="16px"></td>
                                                 <td>{{ agent.calcDmg(data, key, 'multiplier') }}%</td>
                                                 <td>{{ agent.calcDmg(data, key, 'normal') }}</td>
                                                 <td>{{ agent.calcDmg(data, key, 'critical')}}</td>
