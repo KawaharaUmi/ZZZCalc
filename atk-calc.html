@@ -65,7 +65,7 @@
                                     <th rowspan="2">Total</th>
                                 </tr>
                                 <tr>
-                                    <th>Base</th>
+                                    <th>Main</th>
                                     <th>Adv.</th>
                                     <th>%</th>
                                     <th>Val</th>
@@ -76,7 +76,7 @@
                                     <th colspan="2">HP</th>
                                     <td>{{ agent.base.hp }}</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['hp-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['hp-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['hp-v'] }}</td>
                                     <td>{{ agent.total.hp }}</td>
@@ -85,7 +85,7 @@
                                     <th colspan="2">ATK</th>
                                     <td>{{ agent.base.atk }}</td>
                                     <td>{{ agent.equipment.wEngine.atk }}</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['atk-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['atk-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['atk-v'] }}</td>
                                     <td>{{ agent.total.atk }}</td>
@@ -94,7 +94,7 @@
                                     <th colspan="2">DEF</th>
                                     <td>{{ agent.base.def }}</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['def-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['def-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['def-v'] }}</td>
                                     <td>{{ agent.total.def }}</td>
@@ -103,7 +103,7 @@
                                     <th colspan="2">Impact</th>
                                     <td>{{ agent.base.imp }}</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['imp-p'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['imp-p'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.imp }}</td>
@@ -113,7 +113,7 @@
                                     <th>Rate</th>
                                     <td>{{ agent.base.critR }}%</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['crit-r'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['crit-r'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.critR }}%</td>
@@ -122,7 +122,7 @@
                                     <th>DMG%</th>
                                     <td>{{ agent.base.critD }}%</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['crit-d'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['crit-d'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.critD }}%</td>
@@ -132,7 +132,7 @@
                                     <th>Build</th>
                                     <td>{{ agent.base.anmB }}</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['anm-b'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['anm-b'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.anmB }}</td>
@@ -141,7 +141,7 @@
                                     <th>Prof.</th>
                                     <td>{{ agent.base.anmP }}</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['anm-p'] }}</td>
                                     <td>-</td>
                                     <td>{{ agent.equipment.discTotal['anm-p'] }}</td>
                                     <td>{{ agent.total.anmP }}</td>
@@ -151,7 +151,7 @@
                                     <th>Ratio</th>
                                     <td>0%</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['pen-r'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['pen-r'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.penR }}%</td>
@@ -169,17 +169,17 @@
                                     <th colspan="2">EN Regen</th>
                                     <td>{{ agent.base.enReg }}</td>
                                     <td>-</td>
-                                    <td>0</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['en-reg'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['en-reg'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.enReg }}</td>
                                 </tr>
                                 <tr>
-                                    <th rowspan="5">DMG Bonus</th>
+                                    <th rowspan="6">DMG Bonus</th>
                                     <th>Physical</th>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['bonus-phy'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['bonus-phy'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.bonusPhy }}%</td>
@@ -188,7 +188,7 @@
                                     <th>Fire</th>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['bonus-fire'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['bonus-fire'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.bonusFire }}%</td>
@@ -197,7 +197,7 @@
                                     <th>Ice</th>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['bonus-ice'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['bonus-ice'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.bonusIce }}%</td>
@@ -206,7 +206,7 @@
                                     <th>Electric</th>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['bonus-ele'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['bonus-ele'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.bonusEle }}%</td>
@@ -215,10 +215,19 @@
                                     <th>Ether</th>
                                     <td>-</td>
                                     <td>-</td>
-                                    <td>0%</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['bonus-eth'] }}%</td>
                                     <td>{{ agent.equipment.discTotal['bonus-eth'] }}%</td>
                                     <td>-</td>
                                     <td>{{ agent.total.bonusEth }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Deal</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{ agent.equipment.wEngine.advSt['bonus-dmg'] }}%</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{ agent.total.bonusDmg }}%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -278,7 +287,7 @@
                                     <p>Mindscape : {{ agent.mindscape }}
                                         <input type="range" min="0" max="6" v-model="agent.mindscape"></p>
                                     <p>Core Passive : {{ agent.skills.core.level }} / Effects : ATK(Base) + 
-                                        <input type="range" min="0" max="6" v-model="agent.skills.core.level"></p>
+                                        <input type="range" min="0" max="6" v-model="agent.skills.core.level" @change="agent.calcCoreSkillEffect()"></p>
                                     <p>Skill Level (Batch setting) : 
                                         <input type="range" min="1" max="12"></p>
                                 </div>
