@@ -352,40 +352,41 @@
                                             </tr>
                                         </table>
                                     </div>
-                                    <h5>Disc Status</h5>
-                                    <div class="flex" data-ver="2">
-                                        <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
-                                            <legend>Partition {{ key + 1 }}</legend>
-                                            <table class="detail">
-                                                <tr>
-                                                    <th>Main</th>
-                                                    <td class="name">{{ define.display[disc.main] }}</td>
-                                                    <td class="level">&nbsp;</td>
-                                                    <td class="val">+{{ discClass.getMainStat(disc.main, disc.level) }}{{ displayUnit(disc.main) }}</td>
-                                                    <td class="input">&nbsp;</td>
-                                                </tr>
-                                                <tr v-for="i in 4">
-                                                    <th>Sub {{i}}</th>
-                                                    <td>{{ define.display[disc.sub[i-1].type] }}</td>
-                                                    <td>{{ disc.sub[i-1].level }}</td>
-                                                    <td>+{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}{{ displayUnit(disc.sub[i-1].type) }}</td>
-                                                    <td><input type="range" max="5" min="0" v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()"></td>
-                                                </tr>
-                                            </table>
-                                            <div v-if="key > 2">
-                                                <label><input type="radio"></label>
-                                            </div>
-                                            <div>
-                                                <label v-for="key in Object.keys(discClass.sub).filter(item => item != disc.main)">
-                                                    <input type="checkbox"
-                                                        @click="setDiscSubStat(disc, key, agent)" 
-                                                        :name="'p'+patternNo+'-substat'"
-                                                        :checked="disc.sub.find(slot => slot.type == key)"
-                                                        :disabled="(!disc.sub.find(slot => slot.type == key) && !disc.sub.find(slot => slot.type == null))"
-                                                    >{{ define.display[key] }}</label>
-                                            </div>
-                                        </fieldset>
-                                    </div>
+                                </div>
+                                <h4>Disc Status</h4>
+                                <div class="flex" data-ver="2">
+                                    <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
+                                        <legend>Partition {{ key + 1 }}</legend>
+                                        <table class="detail">
+                                            <tr>
+                                                <th>Main</th>
+                                                <td class="name">{{ define.display[disc.main] }}</td>
+                                                <td class="level">&nbsp;</td>
+                                                <td class="val">+{{ discClass.getMainStat(disc.main, disc.level) }}{{ displayUnit(disc.main) }}</td>
+                                                <td class="input">&nbsp;</td>
+                                            </tr>
+                                            <tr v-for="i in 4">
+                                                <th>Sub {{i}}</th>
+                                                <td>{{ define.display[disc.sub[i-1].type] }}</td>
+                                                <td>{{ disc.sub[i-1].level }}</td>
+                                                <td>+{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}{{ displayUnit(disc.sub[i-1].type) }}</td>
+                                                <td><input type="range" max="5" min="0" v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()"></td>
+                                            </tr>
+                                        </table>
+                                        <div v-if="key > 2">
+                                            <label><input type="radio"></label>
+                                        </div>
+                                        <div>
+                                            <label v-for="key in Object.keys(discClass.sub).filter(item => item != disc.main)">
+                                                <input type="checkbox"
+                                                    @click="setDiscSubStat(disc, key, agent)" 
+                                                    :name="'p'+patternNo+'-substat'"
+                                                    :checked="disc.sub.find(slot => slot.type == key)"
+                                                    :disabled="(!disc.sub.find(slot => slot.type == key) && !disc.sub.find(slot => slot.type == null))"
+                                                >{{ define.display[key] }}</label>
+                                        </div>
+                                    </fieldset>
+                                </div>
                                     <!--
                                     <h5>Disc Status</h5>
                                     <div class="flex" data-ver="1">
@@ -407,70 +408,69 @@
                                         </fieldset>
                                     </div>
                                     -->
-                                </div>
                             </section>
                             <section class="skill">
-                            <h4>Skill Damage</h4>
-                            <div>
-                                <div v-for="val,key in define.skillType" class="data">
-                                    <h5 :class="'skill ' + val">[{{ val }}] Level:<select v-model="agent.skills[val].level"><option v-for="i in 16" :value="i - 1">{{ i }}</option></select></h5>
-                                    <table v-for="data, key in agent.skills[val].data">
-                                        <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
+                                <h4>Skill Damage</h4>
+                                <div>
+                                    <div v-for="val,key in define.skillType" class="data">
+                                        <h5 :class="'skill ' + val">[{{ val }}] Level:<select v-model="agent.skills[val].level"><option v-for="i in 16" :value="i - 1">{{ i }}</option></select></h5>
+                                        <table v-for="data, key in agent.skills[val].data">
+                                            <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th>Attr.</th>
+                                                    <th>Multiplier</th>
+                                                    <th>Normal</th>
+                                                    <th>Critical</th>
+                                                    <th>Expected</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="param, key in data.params">
+                                                    <th v-if="data.group.secondary == 'charge'">{{ 'Lv.' + (key + 1) }}</th>
+                                                    <th v-else>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
+                                                    <td><img :src="'./img/icon_type_' + param.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute.toLowerCase() + '.png'" width="16px" height="16px"></td>
+                                                    <td>{{ agent.calcDmg(data, key, 'multiplier') }}%</td>
+                                                    <td>{{ agent.calcDmg(data, key, 'normal') }}</td>
+                                                    <td>{{ agent.calcDmg(data, key, 'critical')}}</td>
+                                                    <td><b>{{ agent.calcDmg(data, key, 'expected') }}</b></td>
+                                                </tr>
+                                            </tbody>
+                                            <!--
+                                            <tfoot>
+                                                <tr v-if="data.combo == 'TRUE'">
+                                                    <th>TTL</th>
+                                                    <td>&nbsp;</td>
+                                                    <td>270%</td>
+                                                    <td>3000</td>
+                                                    <td>4500</td>
+                                                    <td>3750</td>
+                                                </tr>
+                                            </tfoot>
+                                            -->
+                                        </table>
+                                    </div>
+                                </div>
+                                <h4>Anomaly Damage</h4>
+                                <div>
+                                    <table>
                                         <thead>
                                             <tr>
-                                                <th>&nbsp;</th>
-                                                <th>Attr.</th>
-                                                <th>Multiplier</th>
                                                 <th>Normal</th>
                                                 <th>Critical</th>
                                                 <th>Expected</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="param, key in data.params">
-                                                <th v-if="data.group.secondary == 'charge'">{{ 'Lv.' + (key + 1) }}</th>
-                                                <th v-else>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
-                                                <td><img :src="'./img/icon_type_' + param.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute.toLowerCase() + '.png'" width="16px" height="16px"></td>
-                                                <td>{{ agent.calcDmg(data, key, 'multiplier') }}%</td>
-                                                <td>{{ agent.calcDmg(data, key, 'normal') }}</td>
-                                                <td>{{ agent.calcDmg(data, key, 'critical')}}</td>
-                                                <td><b>{{ agent.calcDmg(data, key, 'expected') }}</b></td>
+                                            <tr>
+                                                <td>10000</td>
+                                                <td>15000</td>
+                                                <td>12500</td>
                                             </tr>
                                         </tbody>
-                                        <!--
-                                        <tfoot>
-                                            <tr v-if="data.combo == 'TRUE'">
-                                                <th>TTL</th>
-                                                <td>&nbsp;</td>
-                                                <td>270%</td>
-                                                <td>3000</td>
-                                                <td>4500</td>
-                                                <td>3750</td>
-                                            </tr>
-                                        </tfoot>
-                                        -->
                                     </table>
                                 </div>
-                            </div>
-                            <h4>Anomaly Damage</h4>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Normal</th>
-                                            <th>Critical</th>
-                                            <th>Expected</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>10000</td>
-                                            <td>15000</td>
-                                            <td>12500</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                             </section>
                         </div>
                     </section>

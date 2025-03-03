@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ZZZ Damage Calcurator</title>
+        <link rel="stylesheet" href="common.css" type="text/css">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                  "vue": "https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.js",
+                  "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js"
+                },
+                "scopes": {}
+            }
+        </script>
+        <script src="./define.js"></script>
+        <script src="./data.js"></script>
+        <script src="./agent.js"></script>
+        <script src="./w-engine.js"></script>
+        <script src="./disc-driver.js"></script>
+    </head>
+    <body>
+        <main>
+            <nav>
+                <ul>
+                    <li>Agent & Equipments</li>
+                    <li>Skills</li>
+                </ul>
+            </nav>
+            <h1>Agent Settings</h1>
+            <h2>Agent Data</h2>
+            <section>
+                <fieldset>
+                    <legend>Values in : </legend>
+                    <label><input type="radio">Base</label> <label><input type="radio">Total</label>
+                </fieldset>
+                <!--
+                <filedset>
+                    <legend>Status</legend>
+                    <ul>
+                        <li>HP: <input type="text" v-model="agentStatus.base.hp" maxlength="5" size="5"> (Total: <input type="text" v-model="agentStatus.total.hp" maxlength="5" size="5">)</li>
+                        <li>ATK: <input type="text" v-model="agentStatus.base.atk" maxlength="5" size="5"> (Total: <input type="text" v-model="agentStatus.total.atk" maxlength="5" size="5">)</li>
+                        <li>DEF: <input type="text" v-model="agentStatus.base.def" maxlength="5" size="5"> (Total: <input type="text" v-model="agentStatus.total.def" maxlength="5" size="5">)</li>
+                        <li>Impact: <input type="text" v-model="agentStatus.base.imp" maxlength="5" size="5"> (Total: <input type="text" v-model="agentStatus.total.imp" maxlength="5" size="5">)</li>
+                        <li>CRIT Rate: <input type="text" v-model="agentStatus.base.critR" maxlength="5" size="5"> (Total: <input type="text" v-model="agentStatus.total.critR" maxlength="5" size="5">)</li>
+                        <li>CRIT Dmg%: <input type="text" v-model="agentStatus.base.critD" maxlength="5" size="5"> (Total: <input type="text" v-model="agentStatus.total.critD" maxlength="5" size="5">)</li>
+                        <li>Anomaly Buildup: <input type="text" maxlength="5" size="5"></li>
+                        <li>Anomaly Proficiency: <input type="text" maxlength="5" size="5"></li>
+                        <li>Penetrate%: <input type="text" maxlength="5" size="5"></li>
+                        <li>Penetrate: <input type="text" maxlength="5" size="5"></li>
+                        <li>EN Rgen: <input type="text" maxlength="5" size="5"></li>
+                        <li>Damage Bonus
+                            <ul>
+                                <li>Physical: <input type="text" maxlength="3" size="3"></li>
+                                <li>Fire: <input type="text" maxlength="3" size="3"></li>
+                                <li>Ice: <input type="text" maxlength="3" size="3"></li>
+                                <li>Electric: <input type="text" maxlength="3" size="3"></li>
+                                <li>Ether: <input type="text" maxlength="3" size="3"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </filedset>
+                -->
+            </section>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2">&nbsp;</th>
+                        <th>Total</th>
+                        <th>Agent</th>
+                        <th>W-Engine</th>
+                        <th>Disc(%)</th>
+                        <th>Disc(Value)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th colspan="2">HP</th>
+                        <td><input type="text" v-model="agent.status.total.hp" size="5"></td>
+                        <td><input type="text" v-model="agent.status.base.hp" size="5"></td>
+                        <td><input type="text" v-model="agent.equipment.wEngine.atkMax" size="5"></td>
+                        <td><input type="text" v-model="agent.equipment.total['hp-p']" size="5"></td>
+                        <td><input type="text" v-model="agent.equipment.total['hp-v']" size="5"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">ATK</th>
+                        <td><input type="text" v-model="agent.status.total.atk" size="5"></td>
+                        <td><input type="text" v-model="agent.status.base.atk" size="5"></td>
+                        <td><input type="text" v-model="agent.equipment.wEngine.atkMax" size="5"></td>
+                        <td><input type="text" v-model="agent.equipment.total['atk-p']" size="5"></td>
+                        <td><input type="text" v-model="agent.equipment.total['atk-v']" size="5"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">DEF</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Impact</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">CRIT</th><th>Rate</th>
+                    </tr>
+                    <tr>
+                        <th>Damage</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2">Anomaly</th><th>Buildup</th>
+                    </tr>
+                    <tr>
+                        <th>Proficiency</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Penetrate</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Energy Rgen</th>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>Equipment</h2>
+            <div>
+                <h3>Total</h3>
+                <ul><li>HP:</li><li>HP%:</li><li>ATK:</li><li>ATK%:</li><li>DEF:</li><li>DEF%:</li></ul>
+            </div>
+            <h3>W-Engines</h3>
+            <section>
+                <div>
+                    Class : <select v-model="wEngine.className">
+                        <option v-for="name in define.class" :value="name">{{ name }}</option>
+                    </select>
+                    Rank : <select v-model="wEngine.rank">
+                        <option v-for="name in define.rank" :value="name">{{ name }}</option>
+                    </select>
+                </div>
+                <div>
+                    Name : <select v-model="wEngine.id" @change="onChangeEngine">
+                        <option v-for="(engineData, num) in wEngine.searchData(wEngine.className, wEngine.rank)" :value="num">{{ engineData[2] }} / {{engineData[3]}}</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Level : <input type="text" v-model="agent.equipment.wEngine.level" size="2"> / Promotion : <input type="text" v-model="agent.equipment.wEngine.promotion" size="2"></p>
+                    <p>ATK : {{ agent.equipment.wEngine.atkMax }}</p>
+                </div>
+            </section>
+            <h3>Driver Discs</h3>
+            <section id="disc-detail">
+                <h4>Disc combination pattern</h4>
+                <label><input type="radio" name="pattern" value="4+2">4+2</label>
+                <label><input type="radio" name="pattern" value="2x3">2+2+2</label>
+                <div id="disc-setting">
+                    <fieldset v-for="(disc,i) in agent.equipment.disc">
+                        <legend>Slot {{i+1}}</legend>
+                        <label>Level : <input type="text" v-model="disc.level"></label>
+                        <p>Main status : 
+                            <span v-if="i == 0">HP : {{ discDriver.getMainStat(disc.main, disc.level) }}{{ valueUnit(disc.main) }}</span>
+                            <span v-if="i == 1">ATK : {{ discDriver.getMainStat(disc.main, disc.level) }}{{ valueUnit(disc.main) }}</span>
+                            <span v-if="i == 2">DEF : {{ discDriver.getMainStat(disc.main, disc.level) }}{{ valueUnit(disc.main) }}</span>
+                            <span v-if="i == 3">
+                                <select v-model="disc.main">
+                                    <option value="atk-p">ATK%</option>
+                                    <option value="def-p">DEF%</option>
+                                    <option value="hp-p">HP%</option>
+                                    <option value="crit-r">CRIT Rate</option>
+                                    <option value="crit-d">CRIT Damage</option>
+                                    <option value="anm-p">ANOM Proficiency</option>
+                                </select> : {{ discDriver.getMainStat(disc.main, disc.level) }}{{ valueUnit(disc.main) }}
+                            </span>
+                            <span v-if="i == 4">
+                                <select v-model="disc.main">
+                                    <option value="atk-p">ATK%</option>
+                                    <option value="def-p">DEF%</option>
+                                    <option value="hp-p">HP%</option>
+                                    <option value="pen-p">PEN Ratio</option>
+                                    <option value="bonus-phy">DMG Bonus(Physical)</option>
+                                    <option value="bonus-fire">DMG Bonus(Fire)</option>
+                                    <option value="bonus-ice">DMG Bonus(Ice)</option>
+                                    <option value="bonus-ele">DMG Bonus(Electric)</option>
+                                    <option value="bonus-eth">DMG Bonus(Ether)</option>
+                                </select> : {{ discDriver.getMainStat(disc.main, disc.level) }}{{ valueUnit(disc.main) }}
+                            </span>
+                            <span v-if="i == 5">
+                                <select v-model="disc.main">
+                                    <option value="atk-p">ATK%</option>
+                                    <option value="def-p">DEF%</option>
+                                    <option value="hp-p">HP%</option>
+                                    <option value="imp-p">Impact</option>
+                                    <option value="anm-b">ANOM Buildup</option>
+                                    <option value="en-reg">EN Regen</option>
+                                </select> : {{ discDriver.getMainStat(disc.main, disc.level) }}{{ valueUnit(disc.main) }}
+                            </span>
+                        </p>
+                        <p>Sub status : </p>
+                        <ul>
+                            <li v-for="sub,j in agent.equipment.disc[i].sub">
+                                <select v-model="sub.type">
+                                    <option v-for="val in subList(i)" :value="val">{{ define.display[val] }}</option>
+                                </select>
+                                <select v-model="sub.level">
+                                    <option v-for="val in 6" :value="val-1">+{{ val-1 }}</option>
+                                </select>
+                                : {{ discDriver.stat.sub[sub.type]*(Number(sub.level)+1) }}{{ valueUnit(sub.type) }}
+                            </li>
+                        </ul>
+                    </fieldset>
+                </div>
+            </section>
+        </main>
+        <script type="module">
+            
+            import { createApp, ref } from 'vue'
+
+            const wEngine = new wEngineClass()
+            const discDriver = new discDriverClass()
+            const agent = new agentClass()
+
+            const mainapp = createApp({
+                data() {
+                    return {
+                        define: define,
+                        agent: agent,
+                        wEngine: wEngine,
+                        discDriver: discDriver
+                    }
+                },
+                methods: {
+                    subList(num) {
+                       return Object.keys(this.discDriver.stat.sub).filter(val => this.agent.equipment.disc[num].main != val)
+                    },
+                    valueUnit(t) {
+                        if(t == 'anm-p' || t.slice(-2) == '-v') {
+                            return 'pt'
+                        } else {
+                            return '%'
+                        }
+                    },
+                    onChangeEngine(e) {
+                        this.agent.setEngineData(this.wEngine.getData(Number(e.target.value)))
+                    },
+                    onChangeSubStateType(e) {
+                        console.log(e.target.value)
+                    },
+                    onChangeSubStateLvl(e) {
+                        console.log(e.target.value)
+                    }
+                },
+                beforeUpdate: function() {
+                },
+                computed: {
+                }
+            }).mount('main')
+        </script>
+    </body>
+</html>
