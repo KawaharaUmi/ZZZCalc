@@ -351,7 +351,7 @@
                                     <p>Core Passive : {{ agent.coreLevel }} / Effects : ATK(Base) + 
                                         <label><input type="range" :min="agentClass.rangeLimits.coreLevel.min" :max="agentClass.rangeLimits.coreLevel.max" v-model="agent.coreLevel"></label></p>
                                     <p>Skill Level (Batch setting) : 
-                                        <input type="range" min="1" :max="agent.skills.levelLimit"></p>
+                                        <input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills.levelBatch"></p>
                                         
                                     <div class="change-agent">
                                         <h5>Agent change</h5>
