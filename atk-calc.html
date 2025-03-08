@@ -67,7 +67,7 @@
                                 <h4>Skill Damage</h4>
                                 <div>
                                     <div v-for="val,key in define.skillType" class="data">
-                                        <h5 :class="'skill ' + val">[{{ val }}] Level:<input type="number" v-model="agent.skills[val].level" min="1" :max="agent.skills.levelLimit" list="skill-level"></h5>
+                                        <h5 :class="'skill ' + val">[{{ val }}] <label>Level:<input type="number" v-model="agent.skills[val].level" min="1" :max="agent.skills.levelLimit" list="skill-level"></label></h5>
                                         <table v-for="data, key in agent.skills[val].data">
                                             <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
                                             <thead>

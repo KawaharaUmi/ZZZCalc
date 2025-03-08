@@ -125,6 +125,17 @@ input, select {
     border:none;
 }
 
+input[type="text"], input[type="number"] {
+}
+
+label:has(input[type="text"]), label:has(input[type="number"]) {
+    box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.1), 0px -1px 1px 0px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 2px 10px;
+    line-height: 11pt;
+    font-size: 11pt;
+}
+
 input[type="radio"], input[type="checkbox"] {
     margin: 3pt;
     width: 4pt;
@@ -188,6 +199,7 @@ input[type="range"] {
     border: none;
     border-radius: 3px;
     background: #000;
+    padding: 0 5px;
 }
 
 input[type="range"]::-webkit-slider-runnable-track,
