@@ -9,7 +9,7 @@
     /*font-family: "Oswald", "Century Gothic", sans-serif;*/
     font-family: "Barlow Condensed", "Century Gothic", sans-serif;
     font-weight: 500;
-    color: #eee;
+    color: #ddd;
     scroll-behavior: smooth;
 }
 
@@ -57,6 +57,11 @@ h4 + div {
 h5 {
     margin: 15px 0 0 0;
     width: 100%;
+    height: calc(14pt + 10px);
+    box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.2), 0px -1px 1px 0px rgba(0,0,0,0.3);
+    border-radius: calc((14pt + 10px) / 2);
+    background: #000;
+    padding: 5px 5px 5px 10px;
     line-height: 14pt;
     font-size: 14pt;
     font-weight: 600;
@@ -175,19 +180,43 @@ fieldset.stat-button {
 }
 
 input[type="range"] {
+    margin: 14px 0;
     width: 100%;
-    height: 2px;
-    border: solid 1px #666;
-    border-radius: 2px;
+    height: 6px;
+    box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.1) , 0px -1px 1px 0px rgba(0,0,0,0.2) ;
+    border: none;
+    border-radius: 3px;
     background: #000;
+}
+
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-moz-range-track {
+}
+
+input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb {
+    z-index: 10;
+    width: 24px;
+    height: 32px;
+    border-width: 1px;
+    border-style: solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(95deg,
+        #666 1px, #112 6px);
+    border-radius: 2px;
+    background: linear-gradient(90deg,
+        #334 3px, #223 6px, #112 8px, #112 10px, #556 11px,
+        #fff 11px, #fff 13px,
+        #112 13px, #223 21px, #334 24px
+        );
 }
 
 label:has(input[type="range"]) {
     --max-range: 6;
     --spacer: calc(1px * var(---max-range));
     position: relative;
-    display: inline-block;
-    height: 24px;
+    display: block;
+    height: 32px;
 }
 label:has(input[type="range"])::before {
     display: block;
@@ -237,10 +266,6 @@ div.radio-group {
 
 div.flex-container {
     margin-top: 8px;
-}
-
-input[type="range"]::-webkit-slider-runnable-track,
-input[type="range"]::-moz-range-track {
 }
 
 button {
@@ -800,6 +825,7 @@ section.disc-setting {
                     width: 40%;
                     min-width: 40%;
                     max-width: 40%;
+                    height: 32px;
                     padding: 0;
                 }
             }
