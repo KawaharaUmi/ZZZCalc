@@ -206,8 +206,8 @@ input[type="range"]::-webkit-slider-thumb {
         #666 1px, #112 6px);
     border-radius: 2px;
     background: linear-gradient(90deg,
-        #334 3px, #223 6px, #112 8px, #112 10px, #556 11px,
-        #fff 11px, #fff 13px,
+        #334 3px, #223 6px, #112 8px, #112 9px, #334 10px,
+        #fff 10px, #fff 12px,
         #112 13px, #223 21px, #334 24px
         );
 }
