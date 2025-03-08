@@ -119,8 +119,8 @@ fieldset {
 }
 
 input, select {
-    appearance: none;
     -webkit-appearance: none;
+    appearance: none;
     background: #333;
     border:none;
 }
@@ -194,7 +194,23 @@ input[type="range"]::-webkit-slider-runnable-track,
 input[type="range"]::-moz-range-track {
 }
 
-input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    z-index: 10;
+    width: 24px;
+    height: 32px;
+    border-width: 1px;
+    border-style: solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(95deg,
+        #666 1px, #112 6px);
+    border-radius: 2px;
+    background: linear-gradient(90deg,
+        #334 3px, #223 6px, #112 8px, #112 10px, #556 11px,
+        #fff 11px, #fff 13px,
+        #112 13px, #223 21px, #334 24px
+        );
+}
 input[type="range"]::-moz-range-thumb {
     z-index: 10;
     width: 24px;
