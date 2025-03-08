@@ -57,7 +57,13 @@
                     </div>
                     <section class="result">
                         <div class="wrapper">
-                            <section class="skill">
+                            <nav class="page">
+                                <ul>
+                                    <li><a :href="'#p' + patternNo + '-skills'">Skills</a></li>
+                                    <li><a :href="'#p' + patternNo + '-status'">Status</a></li>
+                                </ul>
+                            </nav>
+                            <section class="skill" :id="'p' + patternNo + '-skills'">
                                 <h4>Skill Damage</h4>
                                 <div>
                                     <div v-for="val,key in define.skillType" class="data">
@@ -127,7 +133,7 @@
                                     </table>
                                 </div>
                             </section>
-                            <section class="status">
+                            <section class="status" :id="'p' + patternNo + '-status'">
                                 <h4>Status details</h4>
                                 <div>
                                     <table class="value-details">
@@ -318,8 +324,16 @@
                         </div>
                     </section>
                     <section class="main">
+                        <nav class="page">
+                            <ul>
+                                <li><a :href="'#p' + patternNo + '-agent'">Agent</a></li>
+                                <li><a :href="'#p' + patternNo + '-wengine'">W-Engine</a></li>
+                                <li><a :href="'#p' + patternNo + '-driver'">Driver set</a></li>
+                                <li><a :href="'#p' + patternNo + '-disc'">Driver stats</a></li>
+                            </ul>
+                        </nav>
                         <div class="wrapper">
-                            <section class="agent">
+                            <section class="agent" :id="'p' + patternNo + '-agent'">
                                 <h4>Agent</h4>
                                 <div>
                                     <p>Name : {{ agent.name.jp }}</p>
@@ -341,35 +355,36 @@
                                         </tr>
                                     </table>
                                     <h5>Basics Setting</h5>
-                                    <table>
-                                        
-                                    </table>
-                                    <p><span>Level : {{ agent.level }}</span> / <span>Promotion : {{ agent.promotion }}</span>
-                                        <input type="range" min="1" max="12" v-model="agent.level" disabled></p>
-                                    <p>Mindscape : {{ agent.mindscape }}
-                                        <input type="range" min="0" max="6" v-model="agent.mindscape"></p>
-                                    <p>Core Passive : {{ agent.coreLevel }} / Effects : ATK(Base) + 
-                                        <label><input type="range" :min="agentClass.rangeLimits.coreLevel.min" :max="agentClass.rangeLimits.coreLevel.max" v-model="agent.coreLevel"></label></p>
-                                    <p>Skill Level (Batch setting) : 
-                                        <input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills.levelBatch"></p>
-                                        
+                                    <fieldset>
+                                        <legend>Agent Level : {{ agent.level }} / {{ agentClass.rangeLimits.level.max }}</legend>
+                                        <label><input type="range" min="1" max="12" v-model="agent.level" disabled></label>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Mindscape : {{ agent.mindscape }} / {{ agentClass.rangeLimits.mindscape.max }}</legend>
+                                        <label><input type="range" min="0" max="6" v-model="agent.mindscape"></label>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Core Passive : {{ agent.coreLevel }} / {{ agentClass.rangeLimits.coreLevel.max }}</legend>
+                                        <label><input type="range" :min="agentClass.rangeLimits.coreLevel.min" :max="agentClass.rangeLimits.coreLevel.max" v-model="agent.coreLevel"></label>
+                                        Effects : 
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Skill Level (Batch setting) : {{ agent.skills.levelBatch }} / {{ agent.skills.levelLimit }}</legend>
+                                        <label><input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills.levelBatch"></label>
+                                    </fieldset>
                                     <div class="change-agent">
                                         <h5>Agent change</h5>
                                         <fieldset>
                                             <legend>Filter</legend>
-                                            <div class="radio-group">
-                                                Class<span>
+                                            <div>Class
                                                     <label v-for="(val, key) in agentClass.types">
                                                         <input type="radio" :name="'p'+ patternNo + 'agent-class'" v-model="agent.selector.type" :value="val">{{ val }}
                                                     </label>
-                                                </span>
                                             </div>
-                                            <div class="radio-group">
-                                                Rank<span>
+                                            <div>Rank
                                                     <label v-for="(val, key) in agentClass.ranks">
                                                         <input type="radio" :name="'p'+ patternNo + 'agent-rank'" v-model="agent.selector.rank" :value="val">{{ val }}
                                                     </label>
-                                                </span>
                                             </div>
                                         </fieldset>
                                         <div class="flex">
@@ -378,7 +393,7 @@
                                     </div>
                                 </div>
                             </section>
-                            <section class="wengine">
+                            <section class="wengine" :id="'p' + patternNo + '-wengine'">
                                 <h4>W-Engine</h4>
                                 <div>
                                     <p>Name : {{ agent.equipment.wEngine.name }}</p>
@@ -403,8 +418,8 @@
                                     
                                 </div>
                             </section>
-                            <section class="driver">
-                                <h4>Driver</h4>
+                            <section class="driver" :id="'p' + patternNo + '-driver'">
+                                <h4>Driver set</h4>
                                 <div>
                                     <div class="disc">
                                         <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]"><input type="checkbox" :name="'p'+ patternNo + '-disc'" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
@@ -463,8 +478,8 @@
                                     </div>
                                     -->
                             </section>
-                            <section class="disc-setting">
-                                <h4>Disc Status</h4>
+                            <section class="disc-setting" :id="'p' + patternNo + '-disc'">
+                                <h4>Driver stats</h4>
                                 <div class="status flex" data-ver="2">
                                     <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
                                         <legend>Partition {{ key + 1 }}</legend>
