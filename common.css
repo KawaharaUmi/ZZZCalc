@@ -120,6 +120,7 @@ fieldset {
 
 input, select {
     appearance: none;
+    -webkit-appearance: none;
     background: #333;
     border:none;
 }
