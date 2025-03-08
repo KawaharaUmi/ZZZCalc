@@ -67,7 +67,7 @@
                                 <h4>Skill Damage</h4>
                                 <div>
                                     <div v-for="val,key in define.skillType" class="data">
-                                        <h5 :class="'skill ' + val">[{{ val }}] <label>Level:<input type="number" v-model="agent.skills[val].level" min="1" :max="agent.skills.levelLimit" list="skill-level"></label></h5>
+                                        <h5 :class="'skill ' + val">[{{ val }}] <label>Level : <input type="text" v-model="agent.skills[val].level" size="2" min="1" :max="agent.skills.levelLimit" list="skill-level"> <input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills[val].level" class="small"></label></h5>
                                         <table v-for="data, key in agent.skills[val].data">
                                             <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
                                             <thead>
@@ -388,7 +388,7 @@
                                             </div>
                                         </fieldset>
                                         <div class="flex">
-                                            <button @click="agent.initAgent(data[0])" v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.selector.type && val[2] == agent.selector.rank)" :class="'agent-' + data[0] + (data[0] == agent.charId ? ' selected' : '')">{{ data[6] }}</button>
+                                            <button @click="agent.initAgent(data[0])" v-for="(data, key) in agentClass.agentData.filter(val => val[1] == agent.selector.type && val[2] == agent.selector.rank)" :class="'agent-' + data[0] + (data[0] == agent.charId ? ' selected' : '')"><span>{{ data[6] }}</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -407,15 +407,36 @@
                                             <th>Adv.</th><td>{{ define.display[Object.entries(agent.equipment.wEngine.advSt).find(obj => obj != 0)[0]] }} +{{ Object.entries(agent.equipment.wEngine.advSt).find(obj => obj != 0)[1] }}</td>
                                         </tr>
                                     </table>
-                                    <p><span>Level : {{ agent.equipment.wEngine.level }}</span> / <span>Promotion : {{ agent.equipment.wEngine.promotion }}</span>
-                                        <input type="range" min="0" max="60" v-model="agent.equipment.wEngine.level" disabled></p>
-                                    <p>Upgrade : {{ agent.equipment.wEngine.grade }}
-                                        <input type="range" min="1" max="5" v-model="agent.equipment.wEngine.grade"></p>
+                                    <fieldset>
+                                        <legend>W-Engine Level : {{ agent.equipment.wEngine.level }} / {{ wEngineClass.valuesLimit.level}}</legend>
+                                        <label><input type="range" min="0" :max="wEngineClass.valuesLimit.level" v-model="agent.equipment.wEngine.level" disabled></label>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Upgrade : {{ agent.equipment.wEngine.grade }} / {{ wEngineClass.valuesLimit.grade }}</legend>
+                                        <label><input type="range" min="1" :max="wEngineClass.valuesLimit.grade" v-model="agent.equipment.wEngine.grade"></label>
+                                    </fieldset>
+                                    <h5>W-Engine change</h5>
+                                    <fieldset>
+                                        <legend>Filter</legend>
+                                        <div>
+                                                <label v-for="(val, key) in wEngineClass.types">
+                                                    <input type="radio" :name="'p'+ patternNo + 'wengine-class'" v-model="agent.selector.wEngine.type" :value="val">{{ val }}
+                                                </label>
+                                        </div>
+                                        <div>Rank
+                                                <label v-for="(val, key) in wEngineClass.ranks">
+                                                    <input type="radio" :name="'p'+ patternNo + 'wengine-rank'" v-model="agent.selector.wEngine.rank" :value="val">{{ val }}
+                                                </label>
+                                        </div>
+                                    </fieldset>
+                                    <div class="flex">
+                                        <button v-for="(data, key) in wEngineClass.pullItemList(agent.selector.wEngine.type, agent.selector.wEngine.rank)" :class="'wengine-' + data[0] + (data[0] == agent.equipment.wEngine.id ? ' selected' : '')" @click="agent.setWEngine(data[0])"><img :src="'./img/icon_wengine_'+data[0]+'.webp'" width="80" height="80"><span>{{ data[4] }}</span></button>
+                                    </div>
+                                    <!--
                                     <p><label>Class <select v-model="agent.equipment.wEngine.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
                                         <label>Rank <select v-model="agent.equipment.wEngine.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
                                         <label>Name <select v-model="agent.equipment.wEngine.id" @change="agent.setWEngine(agent.equipment.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.equipment.wEngine.type && val[2] == agent.equipment.wEngine.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
-                                    <p><span>Level 60</span> / <span>Promotion 5</span></p>
-                                    
+                                    -->
                                 </div>
                             </section>
                             <section class="driver" :id="'p' + patternNo + '-driver'">
