@@ -278,8 +278,13 @@ main {
         bottom: 0; left: 0;
         width: 100dvh;
 
-        & > details > div {
-            background: #000d;
+        & > details {
+            & > div, summary {
+                background: #000d;
+                & > div {
+                    margin-bottom: 15px;
+                }
+            }
         }
     }
 }
@@ -421,7 +426,7 @@ section.pattern {
         z-index: 1;
         box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
         margin-top: 8px;
-        min-height: 46px;
+        min-height: 30svh;
         border-radius: 23px;
         border: solid 1px #161616;
         background: #161616;

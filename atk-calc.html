@@ -374,6 +374,7 @@
                                     </fieldset>
                                     <div class="change-agent">
                                         <h5>Agent change</h5>
+                                        <label><input type="checkbox" v-model="agent.selector.wEngine.autoEquipment" :value="Boolean(true)">Automatically apply Motif W-Engine</label>
                                         <fieldset>
                                             <legend>Filter</legend>
                                             <div>Class
@@ -548,40 +549,48 @@
             </section>
             <footer class="open">
                 <details>
+                    <summary>General</summary>
                     <div>
-                        <h2>General</h2>
-                        <h3>View</h3>
-                        <p><button>Minimize All</button><button>Expand All</button></p>
-                        <p><label><input type="radio">Result Only</label><label><input type="radio">Half:Half</label><label><input type="radio">Setting Only</label></p>
-                        <h4>Evaluation Score</h3>
-                        <label><input type="radio" name="expectValueDisp">Expected ATK</label>
-                        <label><input type="radio" name="expectValueDisp">Expected Damage</label>
-                        <h3>Active Buffs</h3>
-                        ATK% <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.rate" @change="forceUpdate()">% 
-                        ATK <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.increase" @change="forceUpdate()">
-                        <h3>Enemy Defense</h3>
-                        Break Rate <input type="number" size="4" min="100" v-model="agentClass.enemyStatus.breakRate" @change="forceUpdate()">% / 
-                        Defense Coefficient <input type="number" size="4" min="0" v-model="agentClass.enemyStatus.enemyDef" @change="forceUpdate()">%<br>
-                        Weak 
-                        <select v-model="agentClass.enemyStatus.weak.attribute" @change="forceUpdate()">
-                            <option v-for="val of define.attribute" :value="val">{{val}}</option>
-                        </select>
-                        <input type="number" size="4" min="0" v-model="agentClass.enemyStatus.weak.rate" @change="forceUpdate()"> 
-                        Resist 
-                        <select v-model="agentClass.enemyStatus.resist.attribute" @change="forceUpdate()">
-                            <option v-for="val of define.attribute" :value="val">{{val}}</option>
-                        </select><input type="number" size="4" min="0" v-model="agentClass.enemyStatus.resist.rate" @change="forceUpdate()">%
-                        <h3>Add Pattern</h3>
-                        <select v-model="selector.type">
-                            <option v-for="(val, key) in agentClass.types" :value="val">{{ val }}</option>
-                        </select>
-                        <select v-model="selector.rank">
-                            <option v-for="(val, key) in agentClass.ranks" :value="val">{{ val }}</option>
-                        </select>
-                        <select v-model="selector.charId">
-                            <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
-                        </select>
-                        <button @click="addPattern()">Add</button>
+                        <div>
+                            <h3>View</h3>
+                            <p><button>Minimize All</button><button>Expand All</button></p>
+                            <p><label><input type="radio">Result Only</label><label><input type="radio">Half:Half</label><label><input type="radio">Setting Only</label></p>
+                            <h4>Evaluation Score</h4>
+                            <label><input type="radio" name="expectValueDisp">Expected ATK</label>
+                            <label><input type="radio" name="expectValueDisp">Expected Damage</label>
+                        </div>
+                        <div>
+                            <h3>Active Buffs</h3>
+                            ATK% <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.rate" @change="forceUpdate()">% 
+                            ATK <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.int" @change="forceUpdate()">
+                        </div>
+                        <div>
+                            <h3>Enemy Setting</h3>
+                            <p>Break Rate <input type="number" size="4" min="100" v-model="agentClass.enemy.breakRate" @change="forceUpdate()">%</p>
+                            <p>DEF:<input type="number" size="4" min="0" v-model="agentClass.enemy.def" @change="forceUpdate()"> / Debuff:<input type="number" size="3" min="0" max="100" v-model="agentClass.enemy.defDebuff" @change="forceUpdate()"></p>
+                            Weak 
+                            <select v-model="agentClass.enemy.weak.attribute" @change="forceUpdate()">
+                                <option v-for="val of define.attribute" :value="val">{{val}}</option>
+                            </select>
+                            <input type="number" size="4" min="0" v-model="agentClass.enemy.weak.rate" @change="forceUpdate()"> 
+                            Resist 
+                            <select v-model="agentClass.enemy.resist.attribute" @change="forceUpdate()">
+                                <option v-for="val of define.attribute" :value="val">{{val}}</option>
+                            </select><input type="number" size="4" min="0" v-model="agentClass.enemy.resist.rate" @change="forceUpdate()">%
+                        </div>
+                        <div>
+                            <h3>Add Pattern</h3>
+                            <select v-model="selector.type">
+                                <option v-for="(val, key) in agentClass.types" :value="val">{{ val }}</option>
+                            </select>
+                            <select v-model="selector.rank">
+                                <option v-for="(val, key) in agentClass.ranks" :value="val">{{ val }}</option>
+                            </select>
+                            <select v-model="selector.charId">
+                                <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
+                            </select>
+                            <button @click="addPattern()">Add</button>
+                        </div>
                     </div>
                 </details>
             </footer>
