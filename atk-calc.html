@@ -63,76 +63,6 @@
                                     <li><a :href="'#p' + patternNo + '-status'">Status</a></li>
                                 </ul>
                             </nav>
-                            <section class="skill" :id="'p' + patternNo + '-skills'">
-                                <h4>Skill Damage</h4>
-                                <div>
-                                    <div v-for="val,key in define.skillType" class="data">
-                                        <h5 :class="'skill ' + val">[{{ val }}] <label>Level : <input type="text" v-model="agent.skills[val].level" size="2" min="1" :max="agent.skills.levelLimit" list="skill-level"> <input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills[val].level" class="small"></label></h5>
-                                        <table v-for="data, key in agent.skills[val].data">
-                                            <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
-                                            <thead>
-                                                <tr>
-                                                    <th>&nbsp;</th>
-                                                    <th>Attr.</th>
-                                                    <th>Multiplier</th>
-                                                    <th>Normal</th>
-                                                    <th>Critical</th>
-                                                    <th>Expected</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="param, key in data.params">
-                                                    <th v-if="data.group.secondary == 'charge'">{{ 'Lv.' + (key + 1) }}</th>
-                                                    <th v-else>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
-                                                    <td><img :src="'./img/icon_type_' + param.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute.toLowerCase() + '.png'" width="16px" height="16px"></td>
-                                                    <!--<td>{{ data.dmgResults[key].multiplier }}%</td>-->
-                                                    <!--<td>{{ data.dmgResults[key].normal }}</td>
-                                                    <td>{{ data.dmgResults[key].critical }}</td>
-                                                    <td><b>{{ data.dmgResults[key].expected }}</b></td>-->
-                                                    <td>{{ agent.calcDmg(param, agent.skills[val].level, 'multiplier') }}%</td>
-                                                    <td>{{ agent.calcDmg(param, agent.skills[val].level, 'normal') }}</td>
-                                                    <td>{{ agent.calcDmg(param, agent.skills[val].level, 'critical') }}</td>
-                                                    <td><b>{{ agent.calcDmg(param, agent.skills[val].level, 'expected') }}</b></td>
-                                                </tr>
-                                            </tbody>
-                                            <!--
-                                            <tfoot>
-                                                <tr v-if="data.combo == 'TRUE'">
-                                                    <th>TTL</th>
-                                                    <td>&nbsp;</td>
-                                                    <td>270%</td>
-                                                    <td>3000</td>
-                                                    <td>4500</td>
-                                                    <td>3750</td>
-                                                </tr>
-                                            </tfoot>
-                                            -->
-                                        </table>
-                                    </div>
-                                    <datalist id="skill-level">
-                                        <option v-for="i in agent.skills.levelLimit" :label="i" :value="i"></option>
-                                    </datalist>
-                                </div>
-                                <h4>Anomaly Damage</h4>
-                                <div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Normal</th>
-                                                <th>Critical</th>
-                                                <th>Expected</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>10000</td>
-                                                <td>15000</td>
-                                                <td>12500</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </section>
                             <section class="status" :id="'p' + patternNo + '-status'">
                                 <h4>Status details</h4>
                                 <div>
@@ -316,6 +246,76 @@
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ agent.bonusDmg }}%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                            <section class="skill" :id="'p' + patternNo + '-skills'">
+                                <h4>Skill Damage</h4>
+                                <div>
+                                    <div v-for="val,key in define.skillType" class="data">
+                                        <h5 :class="'skill ' + val">[{{ val }}] <label>Level : <input type="text" v-model="agent.skills[val].level" size="2" min="1" :max="agent.skills.levelLimit" list="skill-level"> <input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills[val].level" class="small"></label></h5>
+                                        <table v-for="data, key in agent.skills[val].data">
+                                            <caption>{{define.skillGroupName.jp[val][data.group.secondary]}} : {{ data.name.jp }}</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th>Attr.</th>
+                                                    <th>Multiplier</th>
+                                                    <th>Normal</th>
+                                                    <th>Critical</th>
+                                                    <th>Expected</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="param, key in data.params">
+                                                    <th v-if="data.group.secondary == 'charge'">{{ 'Lv.' + (key + 1) }}</th>
+                                                    <th v-else>{{ key + 1 }}{{ key == 0 ? 'st' : key == 1 ? 'nd' : key == 2 ? 'rd' : 'th' }} Hit</th>
+                                                    <td><img :src="'./img/icon_type_' + param.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + param.attribute.toLowerCase() + '.png'" width="16px" height="16px"></td>
+                                                    <!--<td>{{ data.dmgResults[key].multiplier }}%</td>-->
+                                                    <!--<td>{{ data.dmgResults[key].normal }}</td>
+                                                    <td>{{ data.dmgResults[key].critical }}</td>
+                                                    <td><b>{{ data.dmgResults[key].expected }}</b></td>-->
+                                                    <td>{{ agent.calcDmg(param, agent.skills[val].level, 'multiplier') }}%</td>
+                                                    <td>{{ agent.calcDmg(param, agent.skills[val].level, 'normal') }}</td>
+                                                    <td>{{ agent.calcDmg(param, agent.skills[val].level, 'critical') }}</td>
+                                                    <td><b>{{ agent.calcDmg(param, agent.skills[val].level, 'expected') }}</b></td>
+                                                </tr>
+                                            </tbody>
+                                            <!--
+                                            <tfoot>
+                                                <tr v-if="data.combo == 'TRUE'">
+                                                    <th>TTL</th>
+                                                    <td>&nbsp;</td>
+                                                    <td>270%</td>
+                                                    <td>3000</td>
+                                                    <td>4500</td>
+                                                    <td>3750</td>
+                                                </tr>
+                                            </tfoot>
+                                            -->
+                                        </table>
+                                    </div>
+                                    <datalist id="skill-level">
+                                        <option v-for="i in agent.skills.levelLimit" :label="i" :value="i"></option>
+                                    </datalist>
+                                </div>
+                                <h4>Anomaly Damage</h4>
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Normal</th>
+                                                <th>Critical</th>
+                                                <th>Expected</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>10000</td>
+                                                <td>15000</td>
+                                                <td>12500</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -567,7 +567,11 @@
                         <div>
                             <h3>Enemy Setting</h3>
                             <p>Break Rate <input type="number" size="4" min="100" v-model="agentClass.enemy.breakRate" @change="forceUpdate()">%</p>
-                            <p>DEF:<input type="number" size="4" min="0" v-model="agentClass.enemy.def" @change="forceUpdate()"> / Debuff:<input type="number" size="3" min="0" max="100" v-model="agentClass.enemy.defDebuff" @change="forceUpdate()"></p>
+                            <p>DEF Class : <select v-model="agentClass.enemy.defClass" @change="forceUpdate()">
+                                <option v-for="i of enemyBaseDef" :value="i">{{i}}</option>
+                            </select>
+                             / Level : <input type="number" v-model="agentClass.enemy.level" size="2" min="1" max="70" @change="forceUpdate()">
+                             / DEF : {{ agentClass.enemy.def}} / Debuff:<input type="number" size="3" min="0" max="100" v-model="agentClass.enemy.defDebuff" @change="forceUpdate()"></p>
                             Weak 
                             <select v-model="agentClass.enemy.weak.attribute" @change="forceUpdate()">
                                 <option v-for="val of define.attribute" :value="val">{{val}}</option>
@@ -610,6 +614,7 @@
                     return {
                         count: 0,
                         define: define,
+                        enemyBaseDef: enemyBaseDef,
                         agentClass: agentClass,
                         wEngineClass: wEngineClass,
                         discClass: discClass,
