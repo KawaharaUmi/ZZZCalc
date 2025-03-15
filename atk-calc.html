@@ -362,16 +362,16 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                <th>Normal</th>
-                                                <th>Critical</th>
                                                 <th>Expected</th>
+                                                <th>-</th>
+                                                <th>-</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>10000</td>
-                                                <td>15000</td>
-                                                <td>12500</td>
+                                                <td>{{ agent.calcDmg({attribute: agent.attribute.primary}, 60, 'anomaly')}}</td>
+                                                <td>-</td>
+                                                <td>-</td>
                                             </tr>
                                         </tbody>
                                     </table>
