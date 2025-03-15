@@ -29,3 +29,5 @@ ID,Class,Rank,Attribute,,Name,,Stat,,,,,,,,,,Core Skill,,,,
 25,Attack,S,Electric,,,浅羽悠真,7405,840,600,90,5,50,80,95,0,1.2,critR,4.8,atk,25,55
 26,Support,S,Ether,,,アストラ・ヤオ,8609,640,600,83,5,50,93,92,0,1.2,enReg,0.12,atk,25,56
 27,Attack,S,Fire,,,イヴリン・シュヴァリエ,7788,854,612,93,5,50,92,90,0,1.2,critR,4.8,atk,25,57
+28,Attack,S,Electric,,Soldier 0 – Anby,0号・アンビー,7673,854,612,93,5,50,94,93,0,1.2,critR,4.8,atk,25,58
+29,Stun,A,Physical,,Pulchra Fellini,プルクラ・フェリーニ,7612,590,606,118,5,50,92,90,0,1.2,imp,6,atk,25,59

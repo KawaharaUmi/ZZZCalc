@@ -59,10 +59,66 @@
                         <div class="wrapper">
                             <nav class="page">
                                 <ul>
-                                    <li><a :href="'#p' + patternNo + '-skills'">Skills</a></li>
                                     <li><a :href="'#p' + patternNo + '-status'">Status</a></li>
+                                    <li><a :href="'#p' + patternNo + '-skills'">Skills</a></li>
                                 </ul>
                             </nav>
+                            <section class="status2" :id="'p' + patternNo + '-status2'">
+                                <h4>Status</h4>
+                                <div>
+                                    <div class="value-group">
+                                        <div class="">ATK</div>
+                                        <div class="total">{{agent.atk}}</div>
+                                        <div class="breakdown">{{agent.base.atk}} + {{agent.equipment.wEngine.atk}} + {{Math.floor((agent.base.atk + agent.equipment.wEngine.atk) * agent.equipment.discTotal['atk-p'] / 100)}} ({{agent.equipment.discTotal['atk-p']}}%) + {{agent.equipment.discTotal['atk-v']}}</div>
+                                    </div>
+                                    <div class="value-group">
+                                        <div class="">CRIT Rate</div>
+                                        <div class="total">{{agent.critR}}%</div>
+                                        <div class="breakdown">{{agent.base.critR}} + {{agent.equipment.wEngine.advSt['crit-r']}} + {{agent.equipment.discTotal['crit-r']}}</div>
+                                    </div>
+                                    <div class="value-group">
+                                        <div class="">CRIT DMG</div>
+                                        <div class="total">{{agent.critD}}%</div>
+                                        <div class="breakdown">{{agent.base.critD}} + {{agent.equipment.wEngine.advSt['crit-d']}} + {{agent.equipment.discTotal['crit-d']}}</div>
+                                    </div>
+                                    <div class="value-group">
+                                        <div class="">PEN</div>
+                                        <div class="total">{{agent.penR}}% + {{agent.penV}}</div>
+                                    </div>
+                                    <div class="bonus-group">
+                                        <h5>Bonus</h5>
+                                        <dl>
+                                            <div>
+                                                <dt>Damage</dt>
+                                                <dd>{{agent.bonusDmg}}%</dd>
+                                            </div>
+                                            <div :class="agent.attribute.primary != 'Physical'?'unmatch':''">
+                                                <dt><img src="./img/icon_attribute_physical.png" width="12pt" height="12pt">Phys.</dt>
+                                                <dd>{{agent.bonusPhy}}%</dd>
+                                            </div>
+                                            <div :class="agent.attribute.primary != 'Fire'?'unmatch':''">
+                                                <dt><img src="./img/icon_attribute_fire.png" width="12pt" height="12pt">Fire</dt>
+                                                <dd>{{agent.bonusFire}}%</dd>
+                                            </div>
+                                            <div :class="agent.attribute.primary != 'Ice'?'unmatch':''">
+                                                <dt><img src="./img/icon_attribute_ice.png" width="12pt" height="12pt">Ice</dt>
+                                                <dd>{{agent.bonusIce}}%</dd>
+                                            </div>
+                                            <div :class="agent.attribute.primary != 'Electric'?'unmatch':''">
+                                                <dt><img src="./img/icon_attribute_electric.png" width="12pt" height="12pt">Elec.</dt>
+                                                <dd>{{agent.bonusEle}}%</dd>
+                                            </div>
+                                            <div :class="agent.attribute.primary != 'Ether'?'unmatch':''">
+                                                <dt><img src="./img/icon_attribute_ether.png" width="12pt" height="12pt">Ether</dt>
+                                                <dd>{{agent.bonusEth}}%</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </div>
+                            </section>
                             <section class="status" :id="'p' + patternNo + '-status'">
                                 <h4>Status details</h4>
                                 <div>
@@ -449,21 +505,27 @@
                                     <h5>Set Effects</h5>
                                     <div class="data">
                                         <table v-if="agent.equipment.discSet[0] != null">
-                                            <caption>1 : {{ discClass.data[agent.equipment.discSet[0]][2] }}</caption>
+                                            <caption v-if="agent.equipment.discSet[2] == null">1 : {{ discClass.data[agent.equipment.discSet[0]][2] }}</caption>
+                                            <caption v-else>1 : {{ discClass.data[agent.equipment.discSet[0]][2] }} x 2-pieces</caption>
                                             <tr>
-                                                <th>2-pieces</th>
+                                                <th>x2 Effect</th>
                                                 <td>{{ define.display[discClass.data[agent.equipment.discSet[0]][3]] }}</td>
                                                 <td>+{{ discClass.data[agent.equipment.discSet[0]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[0]][3]) }}</td>
                                             </tr>
                                             <tr v-if="agent.equipment.discSet[2] == null">
-                                                <th>4-pieces</th>
-                                                <td colspan="2"></td>
+                                                <th>x4 Effect</th>
+                                                <td colspan="2" class="description">{{ discClass.disc4pieceEffect[agent.equipment.discSet[0]].description }}</td>
+                                            </tr>
+                                            <tr v-if="agent.equipment.discSet[2] == null" v-for="i of discClass.disc4pieceEffect[agent.equipment.discSet[0]].effect">
+                                                <th>&nbsp;</th>
+                                                <td><input type="checkbox" v-if="i.condition == 'select'">{{ i.targetStat }}</td>
+                                                <td>+{{ i.value }}</td>
                                             </tr>
                                         </table>
                                         <table v-if="agent.equipment.discSet[1] != null">
                                             <caption>2 : {{ discClass.data[agent.equipment.discSet[1]][2] }}</caption>
                                             <tr>
-                                                <th>2-pieces</th>
+                                                <th>x2 Effect</th>
                                                 <td>{{ define.display[discClass.data[agent.equipment.discSet[1]][3]] }}</td>
                                                 <td>+{{ discClass.data[agent.equipment.discSet[1]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[1]][3]) }}</td>
                                             </tr>
@@ -471,7 +533,7 @@
                                         <table v-if="agent.equipment.discSet[2] != null">
                                             <caption>3 : {{ discClass.data[agent.equipment.discSet[2]][2] }}</caption>
                                             <tr>
-                                                <th>2-pieces</th>
+                                                <th>x2 Effect</th>
                                                 <td>{{ define.display[discClass.data[agent.equipment.discSet[2]][3]] }}</td>
                                                 <td>+{{ discClass.data[agent.equipment.discSet[2]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[2]][3]) }}</td>
                                             </tr>
