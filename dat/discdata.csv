@@ -1,16 +1,20 @@
-0,Swing Jazz,スイング・ジャズ,en-reg,20,assist
-1,Woodpecker Electro,ウッドペッカー・エレクトロ,crit-r,8,attack
-2,Puffer Electro,パファー・エレクトロ,pen-p,8,attack
-3,Shockstar Disco,ショックスター・ディスコ,imp-p,6,stun
-4,Freedom Blues,フリーダム・ブルース,anm-p,30,anomaly
-5,Hormone Punk,ホルモン・パンク,atk-p,10,attack
-6,Soul Rock,ソウル・ロック,def-p,16,defense
-7,Inferno Metal,炎獄のヘヴィメタル,bonus-fire,10,dmg-bonus
-8,Chaotic Metal,混沌のヘヴィメタル,bonus-eth,10,dmg-bonus
-9,Thunder Metal,霹靂のヘヴィメタル,bonus-ele,10,dmg-bonus
-10,Polar Metal,極地のヘヴィメタル,bonus-ice,10,dmg-bonus
-11,Fanged Metal,獣牙のヘヴィメタル,bonus-phy,10,dmg-bonus
-12,Proto Punk,プロト・パンク,shield,15,shield
-13,Chaos Jazz,ケイオス・ジャズ,anm-p,30,anomaly
-14,Branch & Blade Song,折枝の刀歌,crit-d,16,anomaly
-15,Astral Voice,静寂のアストラ,atk-p,10,assist
+,,,,,,,,,,,Effect,,stack,,,,,,,,,stack,,,,,,,,,,
+id,en,jp,type,val,group,conditions,range,target,comparison,val,target,val,,max,conditions,range,target,comparsion,val,target,val,,max,conditions,range,target,comparsion,val,target,val,,max
+0,Swing Jazz,スイング・ジャズ,en-reg,20,assist,,,,,,,,,,,,,,,,,,,,,,,,,,,
+1,Woodpecker Electro,ウッドペッカー・エレクトロ,crit-r,8,attack,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2,Puffer Electro,パファー・エレクトロ,pen-r,8,attack,,,,,,,,,,,,,,,,,,,,,,,,,,,
+3,Shockstar Disco,ショックスター・ディスコ,imp-p,6,stun,,,,,,,,,,,,,,,,,,,,,,,,,,,
+4,Freedom Blues,フリーダム・ブルース,anm-p,30,anomaly,,,,,,,,,,,,,,,,,,,,,,,,,,,
+5,Hormone Punk,ホルモン・パンク,atk-p,10,attack,,,,,,,,,,,,,,,,,,,,,,,,,,,
+6,Soul Rock,ソウル・ロック,def-p,16,defense,,,,,,,,,,,,,,,,,,,,,,,,,,,
+7,Inferno Metal,炎獄のヘヴィメタル,bonus-fire,10,dmg-bonus,,,,,,,,,,,,,,,,,,,,,,,,,,,
+8,Chaotic Metal,混沌のヘヴィメタル,bonus-eth,10,dmg-bonus,,,,,,,,,,,,,,,,,,,,,,,,,,,
+9,Thunder Metal,霹靂のヘヴィメタル,bonus-ele,10,dmg-bonus,,,,,,,,,,,,,,,,,,,,,,,,,,,
+10,Polar Metal,極地のヘヴィメタル,bonus-ice,10,dmg-bonus,,,,,,,,,,,,,,,,,,,,,,,,,,,
+11,Fanged Metal,獣牙のヘヴィメタル,bonus-phy,10,dmg-bonus,,,,,,,,,,,,,,,,,,,,,,,,,,,
+12,Proto Punk,プロト・パンク,shield,15,shield,,,,,,,,,,,,,,,,,,,,,,,,,,,
+13,Chaos Jazz,ケイオス・ジャズ,anm-p,30,anomaly,auto,self,none,none,none,bonus-fire,15,1,1,auto,self,none,none,none,bonus-ele,15,1,1,select,self,,,,,,,
+14,Branch & Blade Song,折枝の刀歌,crit-d,16,anomaly,auto,self,anm-b,>,115,crit-d,30,1,1,select,self,none,none,none,crit-r,12,1,1,,,,,,,,,
+15,Astral Voice,静寂のアストラ,atk-p,10,assist,select,team,none,none,none,bonus-dmg,8,1,3,,,,,,,,,,,,,,,,,,
+16,Phaethon’s Melody,「パエトーン」の歌,anm-b,8,anomaly,select,self,none,none,none,anm-p,45,1,1,select,self,none,none,none,bonus-eth,25,1,1,,,,,,,,,
+17,Shadow Harmony,シャドウハーモニー,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

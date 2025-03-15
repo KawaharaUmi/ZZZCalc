@@ -500,7 +500,7 @@
                                 <h4>Driver set</h4>
                                 <div>
                                     <div class="disc">
-                                        <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]"><input type="checkbox" :name="'p'+ patternNo + '-disc'" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
+                                        <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]" :style="'background-image: url(./img/icon_disc_'+ data[0] + '.webp)'"><input type="checkbox" :name="'p'+ patternNo + '-disc'" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
                                     </div>
                                     <h5>Set Effects</h5>
                                     <div class="data">

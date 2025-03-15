@@ -785,23 +785,6 @@ section.pattern {
                 & label:has(input[data-slot="0"])::before { content:'1' }
                 & label:has(input[data-slot="1"])::before { content:'2' }
                 & label:has(input[data-slot="2"])::before { content:'3' }
-
-                & label[data-id='0'] { background-image: url(./img/icon_disc_0.webp) }
-                & label[data-id='1'] { background-image: url(./img/icon_disc_1.webp) }
-                & label[data-id='2'] { background-image: url(./img/icon_disc_2.webp) }
-                & label[data-id='3'] { background-image: url(./img/icon_disc_3.webp) }
-                & label[data-id='4'] { background-image: url(./img/icon_disc_4.webp) }
-                & label[data-id='5'] { background-image: url(./img/icon_disc_5.webp) }
-                & label[data-id='6'] { background-image: url(./img/icon_disc_6.webp) }
-                & label[data-id='7'] { background-image: url(./img/icon_disc_7.webp) }
-                & label[data-id='8'] { background-image: url(./img/icon_disc_8.webp) }
-                & label[data-id='9'] { background-image: url(./img/icon_disc_9.webp) }
-                & label[data-id='10'] { background-image: url(./img/icon_disc_10.webp) }
-                & label[data-id='11'] { background-image: url(./img/icon_disc_11.webp) }
-                & label[data-id='12'] { background-image: url(./img/icon_disc_12.webp) }
-                & label[data-id='13'] { background-image: url(./img/icon_disc_13.webp) }
-                & label[data-id='14'] { background-image: url(./img/icon_disc_14.webp) }
-                & label[data-id='15'] { background-image: url(./img/icon_disc_15.webp) }
             }
         }
     }
