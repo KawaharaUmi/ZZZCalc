@@ -229,7 +229,7 @@ div.radio-group {
     overflow: hidden;
     user-select: none;
     display: inline-block;
-    height: calc(12pt + 2px);
+    height: calc(14pt + 2px);
     border: solid 1px #161616;
     border-radius: calc(12pt + 4px);
     padding: 0 0 0 5px;
@@ -241,7 +241,7 @@ div.radio-group {
     & span {
         display: inline-block;
         margin: 0 0 0 5px;
-        height: 12pt;
+        height: 14pt;
         border-radius: 12pt;
         background: #161616;
         vertical-align: sub;
@@ -256,11 +256,18 @@ div.flex-container {
 button {
     appearance: none;
     margin: 0 2px;
-    border-radius: 10px;
-    border: none;
-    background: #222;
-    padding: 5px 10px;
+    height: calc(14pt + 2px);
+    border-radius: calc(7pt + 1px);
+    border: solid 1px #161616;
+    background: #161616;
+    padding: 0 8px;
+    line-height: 10pt;
     font-size: 12pt;
+    cursor: pointer;
+}
+
+button.delete {
+    background: #900;
 }
 
 div.flex {
@@ -285,6 +292,55 @@ main {
                     margin-bottom: 15px;
                 }
             }
+        }
+    }
+
+    & dialog#delete {
+        position: relative;
+        margin: 0;
+        min-width: 100dvw;
+        min-height: 100dvh;
+        border: none;
+        background: #000c;
+        & > div {
+            position: absolute;
+            top: 50%; left: 50%;
+            margin: auto;
+            max-width: 350px;
+            border: solid 6px #333;
+            border-radius: 24pt;
+            background: #000;
+            padding: 20px;
+            transform-origin: 50% 50%;
+            transform: translate(-50%, -50%);
+        }
+        & blockquote {
+            display: flex;
+            margin: 10px 10px;
+            color: #999;
+            font-size: 9pt;
+            font-weight: normal;
+            font-style: italic;
+        }
+        & blockquote::before {
+            display: block;
+            margin-right: 8px;
+            content: "“";
+            font-size: 24pt;
+            color: #333;
+        }
+        & blockquote::after {
+            display: block;
+            margin-left: 8px;
+            content: "”";
+            font-size: 24pt;
+            color: #333;
+        }
+        & div.select {
+            margin: 0;
+            border-top: solid 1px #333;
+            padding-top: 10px;
+            text-align: right;
         }
     }
 }

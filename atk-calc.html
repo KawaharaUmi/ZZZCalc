@@ -27,7 +27,8 @@
         </header>
         <main>
             <section :data-update="this.count">
-                <section v-for="(agent, patternNo) in data" class="pattern" :id="'pattern-' + patternNo">
+                <delete-dialog id="delete" :execute="deletePattern" :close="closeDeleteDialog"></delete-dialog>
+                <section v-for="(agent, patternNo) in data" class="pattern" :data-display="" :id="'pattern-' + patternNo">
                     <header>
                         <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
                         <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">
@@ -37,22 +38,19 @@
                                 <li v-for="key in agent.equipment.discPattern + 2" :class="'disc set'+ key"><img v-if="agent.equipment.discSet[key - 1] !== null" :src="'./img/icon_disc_' + agent.equipment.discSet[key - 1] + '.webp'" width="40px" height="40px"></li>
                             </ul>
                         </div>
-                        <details class="control">
-                            <summary>⚙️</summary>
-                            <ul>
-                                <li><button @click="setStd(patternNo)">Set to standard</button></li>
-                                <li><button @click="addPattern(patternNo)">Duplication</button></li>
-                                <li><button title="Delete" @click="deletePattern(patternNo)">Delete</button></li>
-                            </ul>
-                        </details>
+                        <ul>
+                            <!--<li><button @click="setStd(patternNo)">Set to standard</button></li>-->
+                            <li><button @click="">_<img src="./img/icon_minimize.svg" alt="Minimize"></button></li>
+                            <li><button @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication"></button></li>
+                        </ul>
                     </header>
                     <div class="control">
+                        <button title="Delete" @click="callDeleteDialog(patternNo)" class="delete">Delete</button>
                         <div class="radio-group">
-                            Display<span>
-                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="result">Result</label>
-                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="half" checked>Both</label>
-                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="setting">Setting</label>
-                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="minimize">minimize</label></span>
+                            {{text.control.title[lang]}}<span>
+                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="result">{{text.control.result[lang]}}</label>
+                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="half" checked>{{text.control.both[lang]}}</label>
+                                <label><input type="radio" :name="'p'+ patternNo + '-size'" class="setting">{{text.control.setting[lang]}}</label>
                         </div>
                     </div>
                     <section class="result">
@@ -156,7 +154,7 @@
                                                 <td>{{ agent.hp }}</td>
                                             </tr>
                                             <tr>
-                                                <th colspan="2">ATK</th>
+                                                <th colspan="2">{{text.status.atk[lang]}}</th>
                                                 <td>{{ agent.base.atk }}</td>
                                                 <td>{{ agent.equipment.wEngine.atk }}</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['atk-p'] }}%</td>
@@ -165,7 +163,7 @@
                                                 <td>{{ agent.atk }}</td>
                                             </tr>
                                             <tr>
-                                                <th colspan="2">DEF</th>
+                                                <th colspan="2">{{text.status.def[lang]}}</th>
                                                 <td>{{ agent.base.def }}</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['def-p'] }}%</td>
@@ -174,7 +172,7 @@
                                                 <td>{{ agent.def }}</td>
                                             </tr>
                                             <tr>
-                                                <th colspan="2">Impact</th>
+                                                <th colspan="2">{{text.status.imp[lang]}}</th>
                                                 <td>{{ agent.base.imp }}</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['imp-p'] }}%</td>
@@ -183,8 +181,7 @@
                                                 <td>{{ agent.imp }}</td>
                                             </tr>
                                             <tr>
-                                                <th rowspan="2">CRIT</th>
-                                                <th>Rate</th>
+                                                <th colspan="2">{{text.status.critR[lang]}}</th>
                                                 <td>{{ agent.base.critR }}%</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['crit-r'] }}%</td>
@@ -193,7 +190,7 @@
                                                 <td>{{ agent.critR }}%</td>
                                             </tr>
                                             <tr>
-                                                <th>DMG%</th>
+                                                <th colspan="2">{{text.status.critD[lang]}}</th>
                                                 <td>{{ agent.base.critD }}%</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['crit-d'] }}%</td>
@@ -202,8 +199,7 @@
                                                 <td>{{ agent.critD }}%</td>
                                             </tr>
                                             <tr>
-                                                <th rowspan="2">ANOM</th>
-                                                <th>Build</th>
+                                                <th colspan="2">{{text.status.anmB[lang]}}</th>
                                                 <td>{{ agent.base.anmB }}</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['anm-b'] }}%</td>
@@ -212,7 +208,7 @@
                                                 <td>{{ agent.anmB }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Prof.</th>
+                                                <th colspan="2">{{text.status.anmP[lang]}}</th>
                                                 <td>{{ agent.base.anmP }}</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['anm-p'] }}</td>
@@ -221,8 +217,7 @@
                                                 <td>{{ agent.anmP }}</td>
                                             </tr>
                                             <tr>
-                                                <th rowspan="2">PEN</th>
-                                                <th>Ratio</th>
+                                                <th colspan="2">{{text.status.penR[lang]}}</th>
                                                 <td>0%</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['pen-r'] }}%</td>
@@ -231,7 +226,7 @@
                                                 <td>{{ agent.penR }}%</td>
                                             </tr>
                                             <tr>
-                                                <th>Value</th>
+                                                <th colspan="2">{{text.status.penV[lang]}}</th>
                                                 <td>0</td>
                                                 <td>-</td>
                                                 <td>-</td>
@@ -240,7 +235,7 @@
                                                 <td>{{ agent.penV }}</td>
                                             </tr>
                                             <tr>
-                                                <th colspan="2">EN Regen</th>
+                                                <th colspan="2">{{text.status.enReg[lang]}}</th>
                                                 <td>{{ agent.base.enReg }}</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['en-reg'] }}%</td>
@@ -250,7 +245,7 @@
                                             </tr>
                                             <tr>
                                                 <th rowspan="6">DMG Bonus</th>
-                                                <th>Physical</th>
+                                                <th>{{text.attribute.phys[lang]}}</th>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['bonus-phy'] }}%</td>
@@ -259,7 +254,7 @@
                                                 <td>{{ agent.bonusPhy }}%</td>
                                             </tr>
                                             <tr>
-                                                <th>Fire</th>
+                                                <th>{{text.attribute.fire[lang]}}</th>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['bonus-fire'] }}%</td>
@@ -268,7 +263,7 @@
                                                 <td>{{ agent.bonusFire }}%</td>
                                             </tr>
                                             <tr>
-                                                <th>Ice</th>
+                                                <th>{{text.attribute.ice[lang]}}</th>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['bonus-ice'] }}%</td>
@@ -277,7 +272,7 @@
                                                 <td>{{ agent.bonusIce }}%</td>
                                             </tr>
                                             <tr>
-                                                <th>Electric</th>
+                                                <th>{{text.attribute.elec[lang]}}</th>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['bonus-ele'] }}%</td>
@@ -286,7 +281,7 @@
                                                 <td>{{ agent.bonusEle }}%</td>
                                             </tr>
                                             <tr>
-                                                <th>Ether</th>
+                                                <th>{{text.attribute.ether[lang]}}</th>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ agent.equipment.wEngine.advSt['bonus-eth'] }}%</td>
@@ -670,8 +665,12 @@
         <script type="module">
 
             import { createApp, ref } from 'vue'
+            import deleteDialog from './lib/deleteDialog.js'
 
             const calcurator = createApp({
+                components: {
+                    deleteDialog
+                },
                 data() {
                     return {
                         count: 0,
@@ -686,7 +685,9 @@
                             charId: 0,
                             type: '',
                             rank: ''
-                        }
+                        },
+                        text: text,
+                        lang: 'jp'
                     }
                 },
                 methods: {
@@ -725,8 +726,19 @@
                         }
                         this.data.splice(newPattern)
                     },
-                    deletePattern(key) {
+                    callDeleteDialog(key) {
+                        const dialog = document.querySelector('#delete')
+                        dialog.dataset.target = key
+                        dialog.showModal()
+                    },
+                    closeDeleteDialog() {
+                        document.querySelector('#delete').close()
+                    },
+                    deletePattern() {
+                        const dialog = document.querySelector('#delete')
+                        const key = dialog.dataset.target
                         this.data.splice(key, 1)
+                        dialog.close()
                     },
                     displayUnit(text) {
                         if(!text) return ''
