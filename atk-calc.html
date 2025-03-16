@@ -28,7 +28,7 @@
         <main>
             <section :data-update="this.count">
                 <delete-dialog id="delete" :data-target="deleteTgt" :execute="deletePattern" :close="closeDeleteDialog"></delete-dialog>
-                <section v-for="(agent, patternNo) in data" class="pattern" :data-display="" :id="'pattern-' + patternNo">
+                <section v-for="(agent, patternNo) in data" class="pattern" data-display="" :id="'pattern-' + patternNo">
                     <header>
                         <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
                         <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">
@@ -38,10 +38,10 @@
                                 <li v-for="key in agent.equipment.discPattern + 2" :class="'disc set'+ key"><img v-if="agent.equipment.discSet[key - 1] !== null" :src="'./img/icon_disc_' + agent.equipment.discSet[key - 1] + '.webp'" width="40px" height="40px"></li>
                             </ul>
                         </div>
-                        <ul>
+                        <ul class="control">
                             <!--<li><button @click="setStd(patternNo)">Set to standard</button></li>-->
-                            <li><button @click="">_<img src="./img/icon_minimize.svg" alt="Minimize"></button></li>
-                            <li><button @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication"></button></li>
+                            <li><button @click="toggleWindowSize(patternNo)"><img src="./img/icon_minimize.svg" alt="Minimize" width="10" height="10"></button></li>
+                            <li><button @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication" width="12" height="12"></button></li>
                         </ul>
                     </header>
                     <div class="control">
@@ -726,6 +726,12 @@
                             Object.assign(newPattern, newObject)
                         }
                         this.data.splice(newPattern)
+                    },
+                    toggleWindowSize(key) {
+                        const target = document.querySelector('#pattern-'+key)
+                        target.dataset.display != 'close'
+                            ? target.dataset.display = 'close'
+                            : target.dataset.display = 'open'
                     },
                     callDeleteDialog(key) {
                         const dialog = document.querySelector('#delete')

@@ -449,16 +449,19 @@ section.pattern {
             }
         }
 
-        & details.control {
-            z-index: 10;
-            position: relative;
-            width: 23px;
-            height: 46px;
-
-            & * {
-                position: relative;
-                left: -100px;
-                width: 150px;
+        & ul.control {
+            margin: 0;
+            & li {
+                margin: 0 0 2px 0;
+                & button {
+                    width: 22px;
+                    height: 22px;
+                    border-radius: 11px;
+                    padding: 0;
+                    & img {
+                        filter: invert(100%) ;
+                    }
+                }
             }
         }
     }
@@ -847,6 +850,15 @@ section.pattern {
                 & label:has(input[data-slot="2"])::before { content:'3' }
             }
         }
+    }
+}
+
+section.pattern[data-display="close"] {
+    & > div {
+        display: none;
+    }
+    & > section {
+        display: none;
     }
 }
 
