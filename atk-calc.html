@@ -27,7 +27,7 @@
         </header>
         <main>
             <section :data-update="this.count">
-                <delete-dialog id="delete" :execute="deletePattern" :close="closeDeleteDialog"></delete-dialog>
+                <delete-dialog id="delete" :data-target="deleteTgt" :execute="deletePattern" :close="closeDeleteDialog"></delete-dialog>
                 <section v-for="(agent, patternNo) in data" class="pattern" :data-display="" :id="'pattern-' + patternNo">
                     <header>
                         <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
@@ -686,6 +686,7 @@
                             type: '',
                             rank: ''
                         },
+                        deleteTgt: Number,
                         text: text,
                         lang: 'jp'
                     }
@@ -728,7 +729,7 @@
                     },
                     callDeleteDialog(key) {
                         const dialog = document.querySelector('#delete')
-                        dialog.dataset.target = key
+                        this.deleteTgt = key
                         dialog.showModal()
                     },
                     closeDeleteDialog() {
