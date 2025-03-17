@@ -31,18 +31,21 @@
                 <section v-for="(agent, patternNo) in data" class="pattern" data-display="" :id="'pattern-' + patternNo">
                     <header>
                         <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
-                        <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'">
+                        <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'" @click="toggleWindowSize(patternNo)">
                             <p>Expected ATK<br><b :class="'number '+ agent.attribute.primary">{{ agent.calcDmg({attribute:agent.attribute.primary,multiplier: 100, growth: 0},16,'expected') }}</b><span class="hidden-mobile"> (Amplified:{{ amplificationRatio(patternNo) }}) / Ratio to standard:{{ calcRatioToStd(patternNo) }}</span></p>
                             <ul class="equipment">
                                 <li class="w-engine"><img :src="'./img/icon_wengine_' + agent.equipment.wEngine.id + '.webp'" width="40px" height="40px"></li>
                                 <li v-for="key in agent.equipment.discPattern + 2" :class="'disc set'+ key"><img v-if="agent.equipment.discSet[key - 1] !== null" :src="'./img/icon_disc_' + agent.equipment.discSet[key - 1] + '.webp'" width="40px" height="40px"></li>
                             </ul>
                         </div>
+                        <button class="copy" @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication" width="14" height="14"></button>
+                        <!--
                         <ul class="control">
-                            <!--<li><button @click="setStd(patternNo)">Set to standard</button></li>-->
-                            <li><button @click="toggleWindowSize(patternNo)"><img src="./img/icon_minimize.svg" alt="Minimize" width="10" height="10"></button></li>
+                            <li><button @click="setStd(patternNo)">Set to standard</button></li>
+                            <li><button><img src="./img/icon_minimize.svg" alt="Minimize" width="10" height="10"></button></li>
                             <li><button @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication" width="12" height="12"></button></li>
                         </ul>
+                        -->
                     </header>
                     <div class="control">
                         <button title="Delete" @click="callDeleteDialog(patternNo)" class="delete">Delete</button>
