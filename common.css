@@ -154,8 +154,8 @@ label:has(input[type="radio"]), label:has(input[type="checkbox"]) {
     height: 14pt;
     border-radius: 7pt;
     padding: 2pt 5pt 2pt 1px;
-    line-height: 9pt;
-    font-size: 11pt;
+    line-height: 10pt;
+    font-size: 10pt;
     font-weight: 600;
     color: #666;
     cursor: pointer;
@@ -225,26 +225,23 @@ label:has(input[type="range"]) {
 }
 
 div.radio-group {
-    flex-shrink: 0;
-    overflow: hidden;
     user-select: none;
     display: inline-block;
     height: calc(14pt + 2px);
     border: solid 1px #161616;
-    border-radius: calc(12pt + 4px);
-    padding: 0 0 0 5px;
-    line-height: 0pt;
+    border-radius: calc(7pt + 1px);
+    padding: 0 0 0 8px;
+    line-height: 10pt;
     font-size: 10pt;
     font-weight: 600;
-    color: #fff;
     white-space: nowrap;
     & span {
         display: inline-block;
         margin: 0 0 0 5px;
         height: 14pt;
-        border-radius: 12pt;
+        border-radius: 7pt;
         background: #161616;
-        vertical-align: sub;
+        vertical-align: -3pt;
         padding-left: 1px;
     } 
 }
@@ -262,7 +259,7 @@ button {
     background: #161616;
     padding: 0 8px;
     line-height: 10pt;
-    font-size: 12pt;
+    font-size: 10pt;
     cursor: pointer;
 }
 
@@ -490,7 +487,6 @@ section.pattern {
     }
 
     & div.control {
-        flex-shrink: 0;
         margin-top: 8px;
         text-align: right;
     }
