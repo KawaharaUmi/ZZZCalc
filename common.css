@@ -227,7 +227,7 @@ label:has(input[type="range"]) {
 div.radio-group {
     user-select: none;
     display: inline-block;
-    height: calc(14pt + 2px);
+    max-height: calc(14pt + 2px);
     border: solid 1px #161616;
     border-radius: calc(7pt + 1px);
     padding: 0 0 0 8px;
@@ -241,7 +241,7 @@ div.radio-group {
         height: 14pt;
         border-radius: 7pt;
         background: #161616;
-        vertical-align: -3pt;
+        vertical-align: -3.5pt;
         padding-left: 1px;
     } 
 }
