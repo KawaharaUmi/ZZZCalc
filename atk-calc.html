@@ -21,7 +21,7 @@
             }
         </script>
     </head>
-    <body>
+    <body background="#000">
         <header>
             <h1>ZZZ Dmg Calc</h1>
         </header>
@@ -61,6 +61,7 @@
                             <nav class="page">
                                 <ul>
                                     <li><a :href="'#p' + patternNo + '-status'">Status</a></li>
+                                    <li><a :href="'#p' + patternNo + '-buffs'">Buffs</a></li>
                                     <li><a :href="'#p' + patternNo + '-skills'">Skills</a></li>
                                 </ul>
                             </nav>
@@ -305,6 +306,42 @@
                                     </table>
                                 </div>
                             </section>
+                            <section class="buffs" :id="'p' + patternNo + '-buffs'">
+                                <h4>Buff Effects</h4>
+                                <div>
+                                    <p class="annotation">有効化されている「戦闘中のみ反映されるバフ」の一覧です。</p>
+                                    <dl>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：全体バフ設定機能</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：全体バフ設定機能</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：音動機[W-Engine Name] クラス限定効果</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：コアパッシブ[Skill Name]</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：コアパッシブ追加能力[Skill Name]</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：ドライバ[Driver Name] 4セット効果</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：ドライバ[Driver Name] 4セット効果</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </section>
                             <section class="skill" :id="'p' + patternNo + '-skills'">
                                 <h4>Skill Damage</h4>
                                 <div>
@@ -502,24 +539,23 @@
                                     </div>
                                     <h5>Set Effects</h5>
                                     <div class="data">
-                                        <table v-if="agent.equipment.discSet[0] != null">
-                                            <caption v-if="agent.equipment.discSet[2] == null">1 : {{ discClass.data[agent.equipment.discSet[0]][2] }}</caption>
-                                            <caption v-else>1 : {{ discClass.data[agent.equipment.discSet[0]][2] }} x 2-pieces</caption>
-                                            <tr>
-                                                <th>x2 Effect</th>
-                                                <td>{{ define.display[discClass.data[agent.equipment.discSet[0]][3]] }}</td>
-                                                <td>+{{ discClass.data[agent.equipment.discSet[0]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[0]][3]) }}</td>
-                                            </tr>
-                                            <tr v-if="agent.equipment.discSet[2] == null">
-                                                <th>x4 Effect</th>
-                                                <td colspan="2" class="description">{{ discClass.disc4pieceEffect[agent.equipment.discSet[0]].description }}</td>
-                                            </tr>
-                                            <tr v-if="agent.equipment.discSet[2] == null" v-for="i of discClass.disc4pieceEffect[agent.equipment.discSet[0]].effect">
-                                                <th>&nbsp;</th>
-                                                <td><input type="checkbox" v-if="i.condition == 'select'">{{ i.targetStat }}</td>
-                                                <td>+{{ i.value }}</td>
-                                            </tr>
-                                        </table>
+                                        <dl v-if="agent.equipment.discSet[0] != null">
+                                            <caption>1 : {{ discClass.driverEffect[agent.equipment.discSet[0]].name }}</caption>
+                                            <div v-if="agent.equipment.discSet[2] == null" v-for="effect, i in discClass.driverEffect[agent.equipment.discSet[0]].primary">
+                                                <dt>x2 Effect ( {{i + 1}} ) : 
+                                                    <span><label><input type="radio" :name="'driverset1-primary-'+i" checked>常時有効</label></span>
+                                                </dt>
+                                                <dd class="description">{{ effect.desc}}</dd>
+                                            </div>
+                                            <div v-if="agent.equipment.discSet[2] == null" v-for="effect, i in discClass.driverEffect[agent.equipment.discSet[0]].secondary">
+                                                <dt class="radio-group">x4 Effect ( {{i + 1}} ) :  
+                                                    <span v-if="effect.condition == 'select'"><label v-if="effect.stack"><input type="number" size="2" min="1" :max="effect.stack" value="3"></label><label><input type="checkbox" :name="'driverset1-secondary-'+i" checked>適用</label></span>
+                                                    <span v-else-if="effect.condition == 'auto'"><label><input type="radio" :name="'driverset1-secondary-'+i" checked>自動適用</label></span>
+                                                    <span v-else>シミュレーション対象外</span>
+                                                </dt>
+                                                <dd class="description">{{ effect.desc }}</dd>
+                                            </div>
+                                        </dl>
                                         <table v-if="agent.equipment.discSet[1] != null">
                                             <caption>2 : {{ discClass.data[agent.equipment.discSet[1]][2] }}</caption>
                                             <tr>

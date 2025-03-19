@@ -68,16 +68,53 @@ h5 {
     text-transform: capitalize;
 }
 
+h6, dt {
+    margin: 0 0 5px 0;
+    border-radius: calc(5pt + 5px);
+    background: #222;
+    padding: 5px;
+    text-align: left;
+    line-height: 10pt;
+    font-size: 10pt;
+}
+
 p, li, dd {
-    font-size: 12pt;
+    font-size: 10pt;
+    font-weight: normal;
 }
 
 p {
     margin: 5px 0;
 }
 
+p.annotation {
+    font-size: 9pt;
+    color: #999;
+}
+
 ul, table {
     margin-top: 10px;
+}
+
+dl:has(div) {
+    @media screen and (min-width: 480px) {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 4px;
+    }
+}
+
+dl > div {
+    margin: 0 0 10px 0;
+    border-radius: calc(5pt + 7px);
+    border: solid 1px #222;
+    padding: 2px 2px 8px 2px;
+    @media screen and (min-width: 480px) {
+        width: calc(50% - 2px);
+    }
+    & dd {
+        margin-left: 8px;
+    }
 }
 
 table tr th {
