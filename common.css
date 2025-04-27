@@ -15,23 +15,37 @@
 
 body {
     position: relative;
-    background: repeating-linear-gradient(40deg, rgba(0,0,0,1), rgba(0,0,0,1) 4px, rgba(31,31,31, 1) 4px, rgba(31,31,31, 1) 8px);
-    padding: 0;
+    background: fixed #000 repeating-linear-gradient(40deg, rgba(0,0,0,1), rgba(0,0,0,1) 4px, rgba(31,31,31, 1) 4px, rgba(31,31,31, 1) 8px);
 
     & > header {
         z-index: 1000;
-        position: fixed;
+        position: sticky;
         top: 0; left: 0;
         width: 100dvw;
         background: #000;
     }
 
+    & > main {
+        position: relative;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        padding: 10px;
+        height: calc(100svh - 75px);
+    }
+
     & > footer {
-        
+        z-index: 1000;
+        position: fixed;
+        bottom: 0; left: 0;
+        width: 100dvw;
+        background: #000;
+        font-size: 8pt;
+        text-align: right;
     }
 }
 
 h1 {
+    height: 10pt;
     line-height: 10pt;
     font-size: 10pt;
     font-weight: 800;
@@ -62,8 +76,8 @@ h5 {
     border-radius: calc((14pt + 10px) / 2);
     background: #000;
     padding: 5px 5px 5px 10px;
-    line-height: 14pt;
-    font-size: 14pt;
+    line-height: 12pt;
+    font-size: 12pt;
     font-weight: 600;
     text-transform: capitalize;
 }
@@ -87,20 +101,33 @@ p {
     margin: 5px 0;
 }
 
+p.object-name {
+    font-size: 12pt;
+    & b {
+        font-weight: 800;
+    }
+}
+
 p.annotation {
     font-size: 9pt;
     color: #999;
 }
 
-ul, table {
+img {
+    vertical-align: sub;
+}
+
+ul, ol, dl, table {
     margin-top: 10px;
 }
 
-dl:has(div) {
-    @media screen and (min-width: 480px) {
-        display: flex;
-        flex-wrap: wrap;
-        column-gap: 4px;
+ul.tags {
+    display: flex;
+    gap: 4px;
+    & li {
+        border-radius: 14px;
+        background: #333;
+        padding: 2px 10px;
     }
 }
 
@@ -109,12 +136,16 @@ dl > div {
     border-radius: calc(5pt + 7px);
     border: solid 1px #222;
     padding: 2px 2px 8px 2px;
-    @media screen and (min-width: 480px) {
-        width: calc(50% - 2px);
-    }
+    width: calc(50% - 2px);
     & dd {
         margin-left: 8px;
     }
+}
+
+dl:has(div) {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 4px;
 }
 
 table tr th {
@@ -311,30 +342,41 @@ div.flex {
 }
 
 main {
-    position: relative;
-    width: 100dvw;
-    height: 100dvh;
-    padding: 20px 10px;
-    overflow: scroll;
 
-    & > footer {
+    & > section#settings {
         z-index: 100;
         position: fixed;
-        bottom: 0; left: 0;
-        width: 100dvh;
+        bottom: 8pt; left: 0;
+        width: 100dvw;
 
-        & > details {
-            & > div, summary {
-                background: #000d;
-                & > div {
-                    margin-bottom: 15px;
-                }
+        & > div {
+            background: #000d;
+        }
+
+        & menu {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            height: 50px;
+            padding: 8px;
+
+            & li {
+                flex-grow: 1;
+                max-width: 70px;
+                border: solid 1px #ccc;
+                font-size: 8pt;
+                text-align: center;
             }
+        }
+
+        & div[data-open="false"] {
+            display: none;
         }
     }
 
     & dialog#delete {
-        position: relative;
+        position: fixed;
         margin: 0;
         min-width: 100dvw;
         min-height: 100dvh;
@@ -383,14 +425,46 @@ main {
     }
 }
 
+nav#pattern-nav {
+    position: fixed;
+    right: 0;
+    width: 200px;
+    height: calc(100dvh - 45px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    & li {
+
+        & button {
+            width: 200px;
+            height: 45px;
+            overflow: hidden;
+            background-size: auto 45px;
+            background-position-x: -20px;
+            background-repeat: no-repeat;
+            text-indent: 100px;
+            font-size: 42pt;
+            font-weight: 900;
+            font-style: italic;
+            color: #fffc;
+        }
+    }
+}
+
+section.pattern[data-display="close"] {
+    height: 62px;
+}
+
 section.pattern {
+    position: relative;
+    scroll-snap-align: center;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
-    margin: 0 auto 10px auto;
+    flex-flow: column nowrap;
+    gap: 8px;
+    margin: 15px auto;
     max-width: 800px;
-    min-height: 62px;
-    max-height: calc(100svh - 50px);
+    height: calc(100svh - 90px);
     border-radius: 31px;
     background: linear-gradient(0deg, #303030, #454545);
     box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.1) inset, 0px -1px 1px 0px rgba(0,0,0,0.2) inset;
@@ -401,13 +475,15 @@ section.pattern {
 
     & > header {
         z-index: 0;
-        flex-shrink: 0;
         display: flex;
         position: relative;
         justify-content: space-between;
         justify-items: center;
         flex-wrap: wrap;
         margin: 0;
+        flex: 0 0 46px;
+        width: 100%;
+        height: 46px;
 
         & h3 {
             user-select: none;
@@ -432,9 +508,6 @@ section.pattern {
             background: #161616;
             background-size: auto 46px;
             padding-left: 150px;
-            @media screen and (max-width: 480px) {
-                padding-left: 130px;
-            }
 
             & p {
                 line-height: 4pt;
@@ -524,129 +597,124 @@ section.pattern {
     }
 
     & div.control {
-        margin-top: 8px;
+        width: 100%;
+        flex: 0 0 22px;
         text-align: right;
     }
     
-    & div.control:has(input.minimize:checked)~section {
+    & div.control:has(input.minimize:checked)~div>section {
         display: none;
     }
 
-    & div.control:has(input.result:checked)~section.main {
+    & div.control:has(input.result:checked)~div>section.main {
         display: none;
     }
 
-    & div.control:has(input.setting:checked)~section.result {
+    & div.control:has(input.setting:checked)~div>section.result {
         display: none;
     }
 
-    & > section {
+    & div.wrapper {
+        height: 10px;
         flex: 1 1 50%;
-        position: relative;
-        z-index: 1;
-        box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
-        margin-top: 8px;
-        min-height: 30svh;
-        border-radius: 23px;
-        border: solid 1px #161616;
-        background: #161616;
-        padding: 0;
-
-        & nav.page {
-            z-index: 100;
-            position: absolute;
-            top: 0; right: 10px;
-            & ul {
-                display: flex;
-                gap: 8px;
-                margin: 0;
-                border-radius: 0 0 10px 10px;
-                background: #333;
-                padding: 4px 8px;
-                & li {
-                    line-height: 9pt;
-                    font-size: 9pt;
-                    color: #ccc;
-                }
-                & a:visited {
-                    color:#ccc;
-                }
-                & a:hover {
-                    color:#eee;
-                }
-            }
-        }
-    }
-
-    & section {
-
-        & table.value-details {
-            width: 100%;
-            border-collapse: collapse;
-            
-            & thead {
-                position: sticky;
-                border-bottom: solid 1px #333;
-            }
-
-            & thead th {
-                border-right: solid 1px #333;
-            }
-
-            & tbody tr:nth-of-type(even) {
-                background: #282828;
-            }
-
-            & tbody th, tbody td {
-                border: solid 1px #161616;
-            }
-
-            & tbody th {
-                padding: 0 3px;
-                text-align: right;
-            }
-
-            & td {
-                width: 13%;
-            }
-
-            @media screen and (max-width:480px) {
-                & thead th, tbody th, td {
-                    font-size: 9pt;
-                }
-            }
-        }
-    }
-    
-    & > section.main, > section.result {
         display: flex;
-        flex-direction: column;
-        overflow: hidden;
+        gap: 8px;
+        flex-flow: row nowrap;
 
-        & div.wrapper {
-            flex: 1;
+        & > section {
+            position: relative;
+            z-index: 1;
+            box-shadow: 1px 1px 1px 0px rgba(255,255,255,0.1), -1px -1px 1px 0px rgba(0,0,0,0.2);
+            max-width: 784px;
+            flex: 1 1 387px;
+            border-radius: 23px;
+            border: solid 1px #161616;
+            background: #161616;
             display: flex;
+            flex-flow: row nowrap;
+            overflow-y: hidden;
             overflow-x: scroll;
             scroll-snap-type: x mandatory;
-            padding: 0;
 
+            & nav.page {
+                z-index: 100;
+                position: absolute;
+                top: 0; right: 10px;
+                & ul {
+                    display: flex;
+                    gap: 8px;
+                    margin: 0;
+                    border-radius: 0 0 10px 10px;
+                    background: #333;
+                    padding: 4px 8px;
+                    & li {
+                        line-height: 9pt;
+                        font-size: 9pt;
+                        color: #ccc;
+                    }
+                    & a:visited {
+                        color:#ccc;
+                    }
+                    & a:hover {
+                        color:#eee;
+                    }
+                }
+            }
+            
             & > section {
                 overflow-y: scroll;
-                scroll-snap-align: center;
+                scroll-snap-align: start;
                 scroll-snap-stop: always;
                 max-width: 100%;
                 min-width: 100%;
-                max-height: 100%;
                 padding: 0px;
-
+    
                 & > div {
                     padding: 8px;
                 }
             }
         }
 
+        & section {
+    
+            & table.value-details {
+                width: 100%;
+                border-collapse: collapse;
+                
+                & thead {
+                    position: sticky;
+                    border-bottom: solid 1px #333;
+                }
+    
+                & thead th {
+                    border-right: solid 1px #333;
+                }
+    
+                & tbody tr:nth-of-type(even) {
+                    background: #282828;
+                }
+    
+                & tbody th, tbody td {
+                    border: solid 1px #161616;
+                }
+    
+                & tbody th {
+                    padding: 0 3px;
+                    text-align: right;
+                }
+    
+                & td {
+                    width: 13%;
+                }
+            }
+        }
+    }
+    
+    & section.main, section.result {
+
         & div.data {
             display: flex;
+            gap: 10px;
             justify-content: space-between;
             flex-wrap: wrap;
 
@@ -706,17 +774,13 @@ section.pattern {
 
             & table {
                 margin: 10px 0 0 0;
-                min-width: calc(50% - 5px);
-                
-                @media screen and (max-width:480px) {
-                    width: 100%;
-                }
+                flex: 1 1 calc(50% - 5px);
 
                 & caption {
                     margin: 0 0 5px 0;
                     border-radius: calc(5pt + 5px);
                     background: #222;
-                    padding: 5px;
+                    padding: 5px 10px;
                     text-align: left;
                     line-height: 10pt;
                     font-size: 10pt;
@@ -725,10 +789,23 @@ section.pattern {
                 & tr > * {
                     border-bottom: dashed 1px #333;
                 }
+
+                & th {
+                    font-size: 8pt;
+                    font-weight: normal;
+                }
             }
         }
 
         & section.agent, section.wengine {
+            & div.detail {
+                padding-left: 4px;
+                & img {
+                    float: left;
+                    margin-right: 10px;
+                    width: 54px; height: 54px;
+                }
+            }
             & table.basic-status {
                 border-collapse: collapse;
                 & th, td {
@@ -775,10 +852,6 @@ section.pattern {
                 text-align: right;
                 text-shadow: 1px 1px #000;
 
-                @media screen and (max-width: 480px) {
-                    width: calc(33% - 2px);
-                    background-position-x: -25px;
-                }
                 & span {
                     display: block;
                     position: absolute;
@@ -909,12 +982,9 @@ section.pattern {
     }
 }
 
-section.pattern[data-display="close"] {
-    & > div {
-        display: none;
-    }
-    & > section {
-        display: none;
+section.weingine {
+    & label.engine-lv::before {
+
     }
 }
 
@@ -957,16 +1027,13 @@ section.driver {
 
 section.disc-setting {
     & div.status {
+        gap: 10px;
     
         & fieldset.disc {
-            width: calc(50% - 4px);
+            flex: 1 1 calc(50% - 10px);
             border: none;
             background: #080808;
             box-shadow: 0px 1px 1px 0px rgba(255,255,255,0.1), 0px -1px -1px 0px rgba(0,0,0,0.2);
-        
-            @media screen and (max-width: 480px) {
-                width: 100%;
-            }
 
             & > legend {
                 display: block;
@@ -984,12 +1051,11 @@ section.disc-setting {
             margin: 5px 0 0 0;
             border-collapse: collapse;
             & tr * {
-                font-size: 12pt;
                 white-space: nowrap;
             }
             & tr:first-of-type {
                 & * {
-                    font-size: 14pt;
+                    font-size: 12pt;
                 }
             }
             
@@ -1000,9 +1066,13 @@ section.disc-setting {
                 & th {
                     width: 5em;
                     text-align: right;
+                    font-size: 8pt;
                 }
                 & th::after {
                     content: ' : '
+                }
+                & td {
+                    font-size: 10pt;
                 }
                 & td.name {
                     width: 23%;
@@ -1081,12 +1151,52 @@ section.status2 {
     }
 }
 
+section.pattern[data-display="close"] {
+    & > div {
+        display: none;
+    }
+}
+
+[data-enable="false"] {
+    opacity: 0.5;
+}
+
+@media screen and (min-width: 959px) {
+}
+
 @media screen and (max-width: 959px) {
-    
+    nav#pattern-nav {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 480px) {
     .hidden-mobile {
         display: none;
+    }
+    dl > div {
+        width: 100%;
+    }
+    dl:has(div) {
+        display: block;
+    }
+    div.summary {
+        padding-left: 130px;
+    }
+    div.wrapper {
+        flex-flow: column nowrap !important;
+        & section {
+            flex: 1 1 50%;
+        }
+    }
+    section.content-frame {
+        flex: 1 1 100%;
+    }
+    fieldset.disc {
+        width: 100%;
+    }
+    div[class*="change-"] button {
+        width: calc(33% - 2px) !important;
+        background-position-x: -25px;
     }
 }

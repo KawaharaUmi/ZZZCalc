@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="./lib/data.js"></script>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                    "vue": "https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.js",
+                  "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js"
+                },
+                "scopes": {}
+            }
+        </script>
+        <style>
+            * {
+                color: #fff;
+            }
+            input, select, button {
+                background: #161616;
+            }
+            body {
+                background: #000;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <ul>
+                <li>
+                    <select v-model="agentId">
+                        <option v-for="data, key in agentData" :value="key">{{data[6]}}</option> 
+                    </select>
+                    (ID : {{agentId}})
+                </li>
+            </ul>
+        </main>
+        <script type="module">
+
+            import { createApp } from 'vue'
+
+            const agentData = agentDataCSV.trim().split('\n')
+                .map(line => line.split(',')
+                    .map(item => item
+                        ? isNaN(Number(item))
+                            ? item
+                            : Math.round(Number(item) * 10) / 10
+                        : undefined
+                    )
+                )
+
+            const generator = createApp({
+                data() {
+                    return {
+                        agentData: agentData,
+                        agentId: 0
+                    }
+                }
+            }).mount('main')
+
+        </script>
+    </body>
+</html>

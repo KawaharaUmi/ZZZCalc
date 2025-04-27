@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Attack Calc</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <!--<link rel="stylesheet" href="common.css" type="text/css">-->
+        <script src="./lib/define.js"></script>
+        <script src="./dat/agent-data.js"></script>
+        <script src="./lib/data.js"></script>
+        <script src="./lib/w-engine.js"></script>
+        <script src="./lib/skill.js"></script>
+        <script src="./lib/disc-driver.js"></script>
+        <script src="./lib/enemy.js"></script>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script type="importmap">
+            {
+                "imports": {
+                  "vue": "https://unpkg.com/vue@3.5.13/dist/vue.esm-browser.js",
+                  "vue/server-renderer": "https://cdn.jsdelivr.net/npm/@vue/server-renderer@3.5.13/dist/server-renderer.esm-browser.js"
+                },
+                "scopes": {}
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <h1>ZZZ Dmg Calc</h1>
+        </header>
+        <main>
+            <delete-dialog id="delete" :target="deleteTgt" :execute="deletePattern" :close="closeDeleteDialog"></delete-dialog>
+            <nav id="pattern-nav">
+                <ol>
+                    <li v-for="(agent, patternNo) in data"><button :style="'background-image:url(./img/agent-thumb-' + agent.charId + '.png)'" @click="scrollTo(patternNo)">{{(String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1}}</button></li>
+                </ol>
+            </nav>
+            <section v-for="(agent, patternNo) in data" class="pattern" data-display="" :id="'pattern-' + patternNo">
+                <header>
+                    <h3 class="hidden-mobile">{{ (String(patternNo + 1).length == 1) ? '0' + (patternNo + 1) : patternNo + 1 }}</h3>
+                    <div class="summary" :style="'background-image: url(./img/agent-thumb-'+agent.charId+'.png); background-repeat: no-repeat;'" @click="toggleWindowSize(patternNo)">
+                        <p>Expected ATK<br><b :class="'number '+ agent.attribute.primary">{{ agent.calcSkillDmg('summary') }}</b><span class="hidden-mobile"> (Amplified:{{ amplificationRatio(patternNo) }}) / Ratio to standard:{{ calcRatioToStd(patternNo) }}</span></p>
+                        <ul class="equipment">
+                            <li class="w-engine"><img :src="'./img/icon_wengine_' + agent.wEngine.id + '.webp'" width="40px" height="40px"></li>
+                            <li v-for="key in agent.equipment.discPattern + 2" :class="'disc set'+ key"><img v-if="agent.equipment.discSet[key - 1] !== null" :src="'./img/icon_disc_' + agent.equipment.discSet[key - 1] + '.webp'" width="40px" height="40px"></li>
+                        </ul>
+                    </div>
+                    <button class="copy" @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication" width="14" height="14"></button>
+                    <!--
+                    <ul class="control">
+                        <li><button @click="setStd(patternNo)">Set to standard</button></li>
+                        <li><button><img src="./img/icon_minimize.svg" alt="Minimize" width="10" height="10"></button></li>
+                        <li><button @click="addPattern(patternNo)"><img src="./img/icon_copy.svg" alt="Duplication" width="12" height="12"></button></li>
+                    </ul>
+                    -->
+                </header>
+                <div class="control">
+                    <button title="Delete" @click="callDeleteDialog(patternNo)" class="delete">Delete</button>
+                    <div class="radio-group">
+                        {{text.control.title[lang]}}<span>
+                            <label><input type="radio" :name="'p'+ patternNo + '-size'" class="result">{{text.control.result[lang]}}</label>
+                            <label><input type="radio" :name="'p'+ patternNo + '-size'" class="half" checked>{{text.control.both[lang]}}</label>
+                            <label><input type="radio" :name="'p'+ patternNo + '-size'" class="setting">{{text.control.setting[lang]}}</label>
+                    </div>
+                </div>
+                <div class="wrapper">
+                    <section class="content-frame result">
+                        <nav class="page">
+                            <ul>
+                                <li><a :href="'#p' + patternNo + '-status'">Status</a></li>
+                                <li><a :href="'#p' + patternNo + '-buffs'">Buffs</a></li>
+                                <li><a :href="'#p' + patternNo + '-skills'">Skills</a></li>
+                            </ul>
+                        </nav>
+                        <!--
+                        <section class="status2" :id="'p' + patternNo + '-status2'">
+                            <h4>Status</h4>
+                            <div>
+                                <div class="value-group">
+                                    <div class="">ATK</div>
+                                    <div class="total">{{agent.atk}}</div>
+                                    <div class="breakdown">{{agent.base.atk}} + {{agent.wEngine.data.atk}} + {{Math.floor((agent.base.atk + agent.wEngine.data.atk) * agent.equipment.discTotal['atk-p'] / 100)}} ({{agent.equipment.discTotal['atk-p']}}%) + {{agent.equipment.discTotal['atk-v']}}</div>
+                                </div>
+                                <div class="value-group">
+                                    <div class="">CRIT Rate</div>
+                                    <div class="total">{{agent.critR}}%</div>
+                                    <div class="breakdown">{{agent.base.critR}} + {{agent.wEngine.data.advSt['crit-r']}} + {{agent.equipment.discTotal['crit-r']}}</div>
+                                </div>
+                                <div class="value-group">
+                                    <div class="">CRIT DMG</div>
+                                    <div class="total">{{agent.critD}}%</div>
+                                    <div class="breakdown">{{agent.base.critD}} + {{agent.wEngine.data.advSt['crit-d']}} + {{agent.equipment.discTotal['crit-d']}}</div>
+                                </div>
+                                <div class="value-group">
+                                    <div class="">PEN</div>
+                                    <div class="total">{{agent.penR}}% + {{agent.penV}}</div>
+                                </div>
+                                <div class="bonus-group">
+                                    <h5>Bonus</h5>
+                                    <dl>
+                                        <div>
+                                            <dt>Damage</dt>
+                                            <dd>{{agent.bonusDmg}}%</dd>
+                                        </div>
+                                        <div :class="agent.attribute.primary != 'Physical'?'unmatch':''">
+                                            <dt><img src="./img/icon_attribute_physical.png" width="12pt" height="12pt">Phys.</dt>
+                                            <dd>{{agent.bonusPhy}}%</dd>
+                                        </div>
+                                        <div :class="agent.attribute.primary != 'Fire'?'unmatch':''">
+                                            <dt><img src="./img/icon_attribute_fire.png" width="12pt" height="12pt">Fire</dt>
+                                            <dd>{{agent.bonusFire}}%</dd>
+                                        </div>
+                                        <div :class="agent.attribute.primary != 'Ice'?'unmatch':''">
+                                            <dt><img src="./img/icon_attribute_ice.png" width="12pt" height="12pt">Ice</dt>
+                                            <dd>{{agent.bonusIce}}%</dd>
+                                        </div>
+                                        <div :class="agent.attribute.primary != 'Electric'?'unmatch':''">
+                                            <dt><img src="./img/icon_attribute_electric.png" width="12pt" height="12pt">Elec.</dt>
+                                            <dd>{{agent.bonusEle}}%</dd>
+                                        </div>
+                                        <div :class="agent.attribute.primary != 'Ether'?'unmatch':''">
+                                            <dt><img src="./img/icon_attribute_ether.png" width="12pt" height="12pt">Ether</dt>
+                                            <dd>{{agent.bonusEth}}%</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                <div>
+
+                                </div>
+                            </div>
+                        </section>
+                        -->
+                        <section class="status" :id="'p' + patternNo + '-status'">
+                            <h4>Status details</h4>
+                            <div>
+                                <table class="value-details">
+                                    <colgroup>
+                                        <col span="2">
+                                        <col>
+                                        <col span="2">
+                                        <col span="2">
+                                        <col>
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" rowspan="2">&nbsp;</th>
+                                            <th rowspan="2">Agent</th>
+                                            <th colspan="2">W-Engine</th>
+                                            <th colspan="2">Driver</th>
+                                            <th rowspan="2">Total</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Main</th>
+                                            <th>Adv.</th>
+                                            <th>%</th>
+                                            <th>Val</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th colspan="2">HP</th>
+                                            <td>{{ agent.base.hp }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['hp-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['hp-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['hp-v'] }}</td>
+                                            <td>{{ agent.hp }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.atk[lang]}}</th>
+                                            <td>{{ agent.base.atk }}</td>
+                                            <td>{{ agent.wEngine.data.atk }}</td>
+                                            <td>{{ agent.wEngine.data.advSt['atk-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['atk-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['atk-v'] }}</td>
+                                            <td>{{ agent.atk }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.def[lang]}}</th>
+                                            <td>{{ agent.base.def }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['def-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['def-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['def-v'] }}</td>
+                                            <td>{{ agent.def }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.imp[lang]}}</th>
+                                            <td>{{ agent.base.imp }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['imp-p'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['imp-p'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.imp }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.critR[lang]}}</th>
+                                            <td>{{ agent.base.critR }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['crit-r'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['crit-r'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.critR }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.critD[lang]}}</th>
+                                            <td>{{ agent.base.critD }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['crit-d'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['crit-d'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.critD }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.anmB[lang]}}</th>
+                                            <td>{{ agent.base.anmB }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['anm-b'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['anm-b'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.anmB }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.anmP[lang]}}</th>
+                                            <td>{{ agent.base.anmP }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['anm-p'] }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.equipment.discTotal['anm-p'] }}</td>
+                                            <td>{{ agent.anmP }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.penR[lang]}}</th>
+                                            <td>0%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['pen-r'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['pen-r'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.penR }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.penV[lang]}}</th>
+                                            <td>0</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.equipment.discTotal['pen-v'] }}</td>
+                                            <td>{{ agent.penV }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="2">{{text.status.enReg[lang]}}</th>
+                                            <td>{{ agent.base.enReg }}</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['en-reg'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['en-reg'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.enReg }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th rowspan="6">DMG Bonus</th>
+                                            <th><img src="./img/icon_attribute_physical.png" width="18" height="18"><span class="hidden-mobile">{{text.attribute.phys[lang]}}</span></th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['bonus-phy'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['bonus-phy'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.bonusPhy }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th><img src="./img/icon_attribute_fire.png" width="18" height="18"><span class="hidden-mobile">{{text.attribute.fire[lang]}}</span></th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['bonus-fire'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['bonus-fire'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.bonusFire }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th><img src="./img/icon_attribute_ice.png" width="18" height="18"><span class="hidden-mobile">{{text.attribute.ice[lang]}}</span></th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['bonus-ice'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['bonus-ice'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.bonusIce }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th><img src="./img/icon_attribute_electric.png" width="18" height="18"><span class="hidden-mobile">{{text.attribute.elec[lang]}}</span></th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['bonus-ele'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['bonus-ele'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.bonusEle }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th><img src="./img/icon_attribute_ether.png" width="18" height="18"><span class="hidden-mobile">{{text.attribute.ether[lang]}}</span></th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['bonus-eth'] }}%</td>
+                                            <td>{{ agent.equipment.discTotal['bonus-eth'] }}%</td>
+                                            <td>-</td>
+                                            <td>{{ agent.bonusEth }}%</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Deal</th>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.wEngine.data.advSt['bonus-dmg'] }}%</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ agent.bonusDmg }}%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                        <section class="buffs" :id="'p' + patternNo + '-buffs'">
+                            <h4>Buff Effects</h4>
+                            <div>
+                                <p class="annotation">ダメージシミュレーション結果に影響する「戦闘中にのみ反映されるバフ」の一覧です。</p>
+                                <div>
+                                    <h5>音動機</h5>
+                                    <p v-if="agent.type != agent.wEngine.data.type" class="annotation">※エージェント({{agent.type}})と音動機({{agent.wEngine.data.type}})でクラスが異なるため、効果がありません。</p>
+                                    <p v-else-if="agent.wEngine.data.buff.include == false" class="annotation">※ダメージ計算に影響する効果がありません</p>
+                                    <dl v-else>
+                                        <div>{{console.log(agent.buffs)}}
+                                            <dt>音動機効果[{{agent.wEngine.data.buff.title}}] Grade:{{agent.wEngine.grade}}</dt>
+                                            <!--
+                                            <dd v-for="effect,key in Object.entries(agent.buffs)">
+                                                
+                                                <span v-if="agent.wEngine.data[effect.sourceId].range == 'team'">チーム全体</span>
+                                                <p><span v-if="effect.data.comparison.left == 'skill'" v-for="tag in effect.data.comparison.right">{{((primary, secondary) => !secondary ? define.skillGroupName[lang].primary[primary]+'スキルグループ' : define.skillGroupName[lang][primary][secondary])(...tag.split('-'))}}</span>
+                                                    {{define.display[effect.data.stat][lang]}} +{{effect.data.val[agent.wEngine.grade - 1]}}{{displayUnit(effect.data.stat)}}
+                                                    <span v-if="effect.data.active == 'auto'">自動適用</span>
+                                                    <span v-else-if="effect.data.active == 'stack'">スタック:<label><input type="number" size="2" min="0" :max="effect.data.stack" v-model="effect.stack"> / 最大 {{effect.data.stack}}</label></span>
+                                                    <span v-else-if="effect.data.active == 'select'">条件発動 <label><input type="radio" v-model="effect.enable" :value="true">有効</label><label><input type="radio" v-model="effect.enable" :value="false">無効</label></span>
+                                                </p>
+                                            </dd>
+                                        -->
+                                        </div>
+                                    </dl>
+                                </div>
+                                <div>
+                                    <h5>ドライバ</h5>
+                                    <dl>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：ドライバ[Driver Name] 4セット効果</dd>
+                                        </div>
+                                        <div>
+                                            <dt>Effect Title +Value</dt>
+                                            <dd>発生源：ドライバ[Driver Name] 4セット効果</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                <div>
+                                    <h5>コアスキル</h5>
+                                    <p v-if="agent.core.passive.include == false && agent.core.additional.include == false" class="annotation">※ダメージ計算に影響する効果がありません</p>
+                                    <dl v-else>
+                                        <div v-if="agent.core.passive.include != false">
+                                            <dt>コアパッシブ[{{agent.core.passive.title}}] Lv.{{agent.coreLevel}}</dt>
+                                            <dd v-for="data,key in agent.core.passive.effect">
+                                                {{define.skillGroupName[lang][data.target.primary][data.target.secondary]}} {{define.display[data.stat][lang]}} +{{data.val[agent.coreLevel]}}{{displayUnit(data.stat)}}
+                                            </dd>
+                                        </div>
+                                        <div v-if="agent.core.additional.include != false">
+                                            <dt>追加能力[{{agent.core.additional.title}}] Lv.{{agent.coreLevel}}</dt>
+                                            <dd v-for="data,key in agent.core.additional.effect">
+                                                {{define.skillGroupName[lang][data.target.primary][data.target.secondary]}} {{define.display[data.stat][lang]}} +{{data.val[agent.coreLevel]}}{{displayUnit(data.stat)}}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                <div v-if="agent.mindscapeLevel > 0">
+                                    <h5>心象映画</h5>
+                                    <p v-if="!agent.mindscape.slice(0, agent.mindscapeLevel).find((data)=> data.include)" class="annotation">※ダメージ計算に影響する効果がありません</p>
+                                    <dl v-else>
+                                        <div v-for="data,key in agent.mindscape.slice(0, agent.mindscapeLevel).filter((obj)=> obj.include)">
+                                            <dt>{{data.title}}</dt>
+                                            <dd v-for="effect,key in data.effect">
+                                                <div v-if="effect.targetType == 'skill'">
+                                                    {{define.skillGroupName[lang][effect.target.primary][effect.target.secondary == '*' ? 'normal': effect.target.secondary]}} {{define.display[effect.stat][lang]}} +{{effect.val}}{{displayUnit(effect.stat)}}
+                                                </div>
+                                                <div v-else-if="effect.targetType == 'stat'">
+                                                    {{define.display[effect.stat][lang]}} +{{effect.val}}{{displayUnit(effect.stat)}}
+                                                </div>
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="skill" :id="'p' + patternNo + '-skills'">
+                            <h4>Skill Damage</h4>
+                            <div>
+                                <fieldset>
+                                    <legend>ターゲット選択</legend>
+                                    <div v-for="enemy, key in enemies">
+                                        <p><label><input type="radio" v-model="agent.targetEnemy" :value="key">[仮想敵 No.{{key + 1}}]</label></p>
+                                        <p>
+                                            Lv : {{enemy.level}}
+                                            / 防御力 : {{Math.floor(enemy.def*10)/10}}
+                                            / 状態 : {{enemy.broken ? 'ブレイク(倍率:' + enemy.breakRate + '%)' : '通常'}}
+                                        </p>
+                                    </div>
+                                </fieldset>
+                                <div v-for="val,key in define.skillType" class="data">
+                                    <h5 :class="'skill ' + val">[{{ val }}] <label>Level : <input type="text" v-model="agent.skills[val].level" size="2" min="1" :max="agent.skills.levelLimit" list="skill-level"> <input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills[val].level" class="small"></label></h5>
+                                    <table v-for="data, key in agent.calcSkillDmg(val, enemies[agent.targetEnemy])">
+                                        <caption>
+                                            {{define.skillGroupName.jp[val][data.secondary]}} : {{ data.name.jp }}
+                                            <label><input type="checkbox">Buff ON</label>
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                <th>Attr.</th>
+                                                <th>Multiplier</th>
+                                                <th>Normal</th>
+                                                <th>Critical</th>
+                                                <th>Expected</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="line, lineNo in data.lines">
+                                                <th v-if="data.secondary == 'charge'">{{ 'Lv.' + (lineNo + 1) }}</th>
+                                                <th v-else>{{ lineNo + 1 }}{{ lineNo == 0 ? 'st' : lineNo == 1 ? 'nd' : lineNo == 2 ? 'rd' : 'th' }} Hit</th>
+                                                <td><img :src="'./img/icon_type_' + line.type.toLowerCase() + '.png'" width="16px" height="16px"> <img :src="'./img/icon_attribute_' + line.attribute.toLowerCase() + '.png'" width="16px" height="16px"></td>
+                                                <td>{{ line.multiplier }}%</td>
+                                                <td>{{ line.normal }}</td>
+                                                <td>{{ line.critical }}</td>
+                                                <td><b>{{ line.expected }}</b></td>
+                                            </tr>
+                                        </tbody>
+                                        <!--
+                                        <tfoot>
+                                            <tr v-if="data.combo == 'TRUE'">
+                                                <th>TTL</th>
+                                                <td>&nbsp;</td>
+                                                <td>270%</td>
+                                                <td>3000</td>
+                                                <td>4500</td>
+                                                <td>3750</td>
+                                            </tr>
+                                        </tfoot>
+                                        -->
+                                    </table>
+                                </div>
+                                <datalist id="skill-level">
+                                    <option v-for="i in agent.skills.levelLimit" :label="i" :value="i"></option>
+                                </datalist>
+                            </div>
+                            <h4>Anomaly Damage</h4>
+                            <div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Expected</th>
+                                            <th>-</th>
+                                            <th>-</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ agent.calcAnomalyDmg({attribute: agent.attribute.primary}, 60, 'anomaly')}}</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </section>
+                    <section class="content-frame main">
+                        <nav class="page">
+                            <ul>
+                                <li><a :href="'#p' + patternNo + '-agent'">Agent</a></li>
+                                <li><a :href="'#p' + patternNo + '-wengine'">W-Engine</a></li>
+                                <li><a :href="'#p' + patternNo + '-driver'">Driver set</a></li>
+                                <li><a :href="'#p' + patternNo + '-disc'">Driver stats</a></li>
+                            </ul>
+                        </nav>
+                        <section class="agent" :id="'p' + patternNo + '-agent'">
+                            <h4>Agent</h4>
+                            <div>
+                                <p class="object-name"><b>{{ agent.name.jp }}</b></p>
+                                <ul class="tags">
+                                    <li>{{ text.type[agent.type.toLowerCase()][lang] }}</li>
+                                    <li>{{ agent.rank }}</li>
+                                    <li><img :src="'./img/icon_attribute_' + agent.attribute.primary.toLowerCase() + '.png'" width="16pt" height="16pt"> {{ agent.attribute.secondary ? agent.attribute.secondary : agent.attribute.primary }}</li>
+                                </ul>
+                                <table class="basic-status">
+                                    <tr>
+                                        <th>HP</th><td>{{ agent.base.hp }}</td>
+                                        <th>ATK</th><td>{{ agent.base.atk }}</td>
+                                        <th>DEF</th><td>{{ agent.base.def }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Impact</th><td>{{ agent.base.imp }}</td>
+                                        <th>ANOM Build.</th><td>{{ agent.base.anmB }}</td>
+                                        <th>ANOM Prof.</th><td>{{ agent.base.anmP }}</td>
+                                    </tr>
+                                </table>
+                                <h5>Basics Setting</h5>
+                                <fieldset>
+                                    <legend>Agent Level : {{ agent.level }} / {{ agentClass.rangeLimits.level.max }}</legend>
+                                    <label><input type="range" min="1" max="12" v-model="agent.level" disabled></label>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Mindscape : {{ agent.mindscapeLevel }} / {{ agentClass.rangeLimits.mindscape.max }}</legend>
+                                    <label><input type="range" min="0" :max="agentClass.rangeLimits.mindscape.max" v-model="agent.mindscapeLevel"></label>
+                                    <details>
+                                        <summary>心象映画効果詳細</summary>
+                                        <dl>
+                                            <div v-for="effect,key in agent.mindscape" :data-enable="key < agent.mindscapeLevel">
+                                                <dt>Lv {{key+1}} : {{effect.title}}</dt>
+                                                <dd>{{effect.desc}}</dd>
+                                            </div>
+                                        </dl>
+                                    </details>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Core Passive : {{ agent.coreLevel }} / {{ agentClass.rangeLimits.coreLevel.max }}</legend>
+                                    <label><input type="range" :min="agentClass.rangeLimits.coreLevel.min" :max="agentClass.rangeLimits.coreLevel.max" v-model="agent.coreLevel"></label>
+                                    Effects : 
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Skill Level (Batch setting) : {{ agent.skills.levelBatch }} / {{ agent.skills.levelLimit }}</legend>
+                                    <label><input type="range" min="1" :max="agent.skills.levelLimit" v-model="agent.skills.levelBatch"></label>
+                                </fieldset>
+                                <div class="change-agent">
+                                    <h5>Agent change</h5>
+                                    <label><input type="checkbox" v-model="agent.selector.wEngine.autoEquipment" :value="Boolean(true)">モチーフ音動機を自動的に装備</label>
+                                    <fieldset>
+                                        <legend>Filter</legend>
+                                        <div>Class
+                                                <label v-for="(val, key) in agentClass.types">
+                                                    <input type="radio" :name="'p'+ patternNo + 'agent-class'" v-model="agent.selector.type" :value="val">{{ text.type[val.toLowerCase()][lang] }}
+                                                </label>
+                                        </div>
+                                        <div>Rank
+                                                <label v-for="(val, key) in agentClass.ranks">
+                                                    <input type="radio" :name="'p'+ patternNo + 'agent-rank'" v-model="agent.selector.rank" :value="val">{{ val }}
+                                                </label>
+                                        </div>
+                                    </fieldset>
+                                    <div class="flex">
+                                        <button v-for="(data, key) in agentClass.agentData.filter((obj) => obj.type == agent.selector.type && obj.rank == agent.selector.rank)" :class="'agent-' + data.charId + (data.charId == agent.charId ? ' selected' : '')" @click="agent.initAgent(data.charId)"><span>{{ data.name.jp }}</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="wengine" :id="'p' + patternNo + '-wengine'">
+                            <h4>W-Engine</h4>
+                            <div>
+                                <div class="detail">
+                                    <img :src="'./img/icon_wengine_'+ agent.wEngine.id +'.webp'" height="54">
+                                    <p class="object-name"><b>{{ agent.wEngine.data.name[lang] }}</b></p>
+                                    <ul class="tags">
+                                        <li>{{ text.type[agent.wEngine.data.type.toLowerCase()][lang] }}</li>
+                                        <li>{{ agent.wEngine.data.rank }}</li>
+                                    </ul>
+                                </div>
+                                <fieldset>
+                                    <legend>W-Engine Level : {{ agent.wEngine.level }} / {{ wEngineClass.valuesLimit.level}}</legend>
+                                    <p>ATK<span>{{ agent.wEngine.data.atk }}</span> Adv.<span>{{ define.display[Object.entries(agent.wEngine.data.advSt).find(obj => obj != 0)[0]][lang] }} +{{ Object.entries(agent.wEngine.data.advSt).find(obj => obj != 0)[1] }}</span></p>
+                                    <label class="engine-lv"><input type="range" min="0" :max="wEngineClass.valuesLimit.level" v-model="agent.wEngine.level" disabled></label>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Upgrade : {{ agent.wEngine.grade }} / {{ wEngineClass.valuesLimit.grade }}</legend>
+                                    <label><input type="range" min="1" :max="wEngineClass.valuesLimit.grade" v-model="agent.wEngine.grade"></label>
+                                </fieldset>
+                                <h6>音動機効果 : {{agent.wEngine.data.buff.title}}</h6>
+                                <p>{{agent.wEngine.data.buff.desc}}</p>
+                                <h5>W-Engine change</h5>
+                                <fieldset>
+                                    <legend>Filter</legend>
+                                    <div>
+                                            <label v-for="(val, key) in wEngineClass.types">
+                                                <input type="radio" :name="'p'+ patternNo + 'wengine-class'" v-model="agent.selector.wEngine.type" :value="val">{{ val }}
+                                            </label>
+                                    </div>
+                                    <div>Rank
+                                            <label v-for="(val, key) in wEngineClass.ranks">
+                                                <input type="radio" :name="'p'+ patternNo + 'wengine-rank'" v-model="agent.selector.wEngine.rank" :value="val">{{ val }}
+                                            </label>
+                                            <label>
+                                                <input type="radio" :name="'p'+ patternNo + 'wengine-rank'" v-model="agent.selector.wEngine.rank" value="*">All
+                                            </label>
+                                    </div>
+                                </fieldset>
+                                <div class="change-wengine flex">
+                                    <button v-for="(data, key) in wEngineClass.pullItemList(agent.selector.wEngine.type, agent.selector.wEngine.rank)" :class="'wengine-' + data.id + (data.id == agent.wEngine.id ? ' selected' : '')" @click="agent.setWEngine(data.id)"><img :src="'./img/icon_wengine_'+data.id+'.webp'" width="80" height="80"><span>{{ data.name[lang] }}</span></button>
+                                </div>
+                                <!--
+                                <p><label>Class <select v-model="agent.wEngine.data.type"><option v-for="val in define.class" :value="val">{{ val }}</option></select></label>
+                                    <label>Rank <select v-model="agent.wEngine.data.rank"><option v-for="val in define.rank" :value="val">{{ val }}</option></select></label>
+                                    <label>Name <select v-model="agent.wEngine.id" @change="agent.setWEngine(agent.wEngine.id)"><option v-for="(data, key) in wEngineClass.data.filter(val => val[1] == agent.wEngine.data.type && val[2] == agent.wEngine.data.rank)" :value="data[0]">{{ data[4] }}</option></select></label></p>
+                                -->
+                            </div>
+                        </section>
+                        <section class="driver" :id="'p' + patternNo + '-driver'">
+                            <h4>Driver set</h4>
+                            <div>
+                                <div class="disc">
+                                    <label v-for="data in discClass.data.toSorted((a, b) => a[5] > b[5])" :data-id="data[0]" :style="'background-image: url(./img/icon_disc_'+ data[0] + '.webp)'"><input type="checkbox" :name="'p'+ patternNo + '-disc'" :value="data[0]" @click="setDriver(agent, data[0], this)" :data-slot="agent.equipment.discSet.findIndex(val => val == data[0])" :checked="agent.equipment.discSet.includes(data[0])" :disabled="(!agent.equipment.discSet.includes(data[0]) && !agent.equipment.discSet.includes(null))"></label>
+                                </div>
+                                <h5>Set Effects</h5>
+                                <div class="data">
+                                    <dl v-if="agent.equipment.discSet[0] != null">
+                                        <caption>1 : {{ discClass.driverEffect[agent.equipment.discSet[0]].name }}</caption>
+                                        <div v-if="agent.equipment.discSet[2] == null" v-for="effect, i in discClass.driverEffect[agent.equipment.discSet[0]].primary">
+                                            <dt>x2 Effect ( {{i + 1}} ) : 
+                                                <span><label><input type="radio" :name="'driverset1-primary-'+i" checked>常時有効</label></span>
+                                            </dt>
+                                            <dd class="description">{{ effect.desc}}</dd>
+                                        </div>
+                                        <div v-if="agent.equipment.discSet[2] == null" v-for="effect, i in discClass.driverEffect[agent.equipment.discSet[0]].secondary">
+                                            <dt class="radio-group">x4 Effect ( {{i + 1}} ) :  
+                                                <span v-if="effect.condition == 'select'"><label v-if="effect.stack"><input type="number" size="2" min="1" :max="effect.stack" value="3"></label><label><input type="checkbox" :name="'driverset1-secondary-'+i" checked>適用</label></span>
+                                                <span v-else-if="effect.condition == 'auto'"><label><input type="radio" :name="'driverset1-secondary-'+i" checked>自動適用</label></span>
+                                                <span v-else>シミュレーション対象外</span>
+                                            </dt>
+                                            <dd class="description">{{ effect.desc }}</dd>
+                                        </div>
+                                    </dl>
+                                    <table v-if="agent.equipment.discSet[1] != null">
+                                        <caption>2 : {{ discClass.data[agent.equipment.discSet[1]][2] }}</caption>
+                                        <tr>
+                                            <th>x2 Effect</th>
+                                            <td>{{ define.display[discClass.data[agent.equipment.discSet[1]][3]][lang] }}</td>
+                                            <td>+{{ discClass.data[agent.equipment.discSet[1]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[1]][3]) }}</td>
+                                        </tr>
+                                    </table>
+                                    <table v-if="agent.equipment.discSet[2] != null">
+                                        <caption>3 : {{ discClass.data[agent.equipment.discSet[2]][2] }}</caption>
+                                        <tr>
+                                            <th>x2 Effect</th>
+                                            <td>{{ define.display[discClass.data[agent.equipment.discSet[2]][3]][lang] }}</td>
+                                            <td>+{{ discClass.data[agent.equipment.discSet[2]][4] }}{{ displayUnit(discClass.data[agent.equipment.discSet[2]][3]) }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="disc-setting" :id="'p' + patternNo + '-disc'">
+                            <h4>Driver stats</h4>
+                            <div class="status flex" data-ver="2">
+                                <fieldset class="disc" v-for="disc, key in agent.equipment.disc">
+                                    <legend>Partition {{ key + 1 }}</legend>
+                                    <table class="detail">
+                                        <tr>
+                                            <th>Main</th>
+                                            <td class="name" colspan="2">{{ define.display[disc.main][lang] }}</td>
+                                            <td class="val">+{{ discClass.getMainStat(disc.main, disc.level) }}{{ displayUnit(disc.main) }}</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr v-for="i in 4">
+                                            <th>Sub {{i}}</th>
+                                            <td class="name">{{ disc.sub[i-1].type ? define.display[disc.sub[i-1].type][lang] : '-' }}</td>
+                                            <td class="level">{{ disc.sub[i-1].level }}</td>
+                                            <td class="val">+{{ discClass.getSubStat(disc.sub[i-1].type, disc.sub[i-1].level) }}{{ displayUnit(disc.sub[i-1].type) }}</td>
+                                            <td class="input"><input type="range" max="5" min="0" v-model="disc.sub[i-1].level" @change="agent.calcDiscTotal()" list="disc-steps"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5">Points remaining</td>
+                                        </tr>
+                                    </table>
+                                    <fieldset v-if="key > 2" class="stat-button">
+                                        <legend>Main Stat</legend>
+                                        <label v-for="stat in discClass.mainTable[key]"><input type="radio" v-model="disc.main" :value="stat" @change="agent.calcDiscTotal()">{{ define.display[stat][lang] }}</label>
+                                    </fieldset>
+                                    <fieldset class="stat-button">
+                                        <legend>Sub Stat <small>(Up to 4 types)</small></legend>
+                                        <label v-for="key in Object.keys(discClass.sub)">
+                                            <input type="checkbox"
+                                                @click="setDiscSubStat(disc, key, agent)" 
+                                                :name="'p'+patternNo+'-substat'"
+                                                :checked="disc.sub.find(slot => slot.type == key) && disc.main != key"
+                                                :disabled="key == disc.main || (!disc.sub.find(slot => slot.type == key) && !disc.sub.find(slot => !slot.type == ''))"
+                                            >{{ define.display[key][lang] }}</label>
+                                        </fieldset>
+                                </fieldset>
+                            </div>
+                            <datalist id="disc-steps">
+                                <option v-for="i in (agentClass.rangeLimits.discLevel.sub.max + 1)" :value="i" :label="i"></option>
+                            </datalist>
+                        </section>
+                    </section>
+                </div>
+            </section>
+            <section id="settings">
+                <div>
+                    <div :data-open="menu == 1">
+                        <h3>Add Pattern</h3>
+                        <select v-model="selector.type">
+                            <option v-for="(val, key) in agentClass.types" :value="val">{{ val }}</option>
+                        </select>
+                        <select v-model="selector.rank">
+                            <option v-for="(val, key) in agentClass.ranks" :value="val">{{ val }}</option>
+                        </select>
+                        <select v-model="selector.charId">
+                            <option v-for="(data, key) in agentClass.agentData.filter(val => val[1] == selector.type && val[2] == selector.rank)" :value="Number(data[0])">{{ data[6] }}</option>
+                        </select>
+                        <button @click="addPattern()">Add</button>
+                    </div>
+                    <div :data-open="menu == 2">
+                        <h3>Active Buffs</h3>
+                        ATK% <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.rate">% 
+                        ATK <input type="checkbox"> <input type="number" size="4" min="0" v-model="agentClass.activeBuff.int">
+                    </div>
+                    <div :data-open="menu == 3">
+                        <h3>Enemy Setting</h3>
+                        <p class="annotation">スキル計算に使用する敵についての設定です。3パターン設定できます。どの敵を対象として計算するかは、エージェントごとの「Skill Damage」ページにある「ターゲット選択」で選べます。</p>
+                        <p class="annotation">※Lv60以上はLvによる防御力の変動がありません。(ゲームバージョン 1.6時点)</p>
+                        <fieldset v-for="enemy, key in enemies">
+                            <legend>Enemy Set #1</legend>
+                            <p>識別名:<input type="text" v-model="enemy.name" size="20" max="20"></p>
+                            <p>Level : <input type="number" v-model="enemy.level" size="2" min="1" max="70">
+                                / 防御基礎値 : <select v-model="enemy.defClass">
+                                    <option v-for="i of enemyClass.defBase" :value="i">{{i}}</option>
+                                </select>
+                                / 防御力 : {{Math.floor(enemy.def * 10)/10}}
+                            </p>
+                            <p>
+                                防御デバフ : <input type="number" size="3" min="0" max="100" v-model="enemy.debuff">%
+                            </p>
+                            <p>
+                                ブレイク : <label><input type="checkbox" v-model="enemy.broken">Break</label> (倍率 : <input type="number" size="4" min="100" v-model="enemy.breakRate">%)
+                            </p>
+                            <p>
+                                弱点属性 : 
+                                <select v-for="slot, key in enemy.weak" v-model="enemy.weak[key]">
+                                    <option v-for="val, key of ['None', ...define.attribute]" :value="key">{{val}}</option>
+                                </select>
+                                / 属性耐性 : 
+                                <select v-for="slot, key in enemy.resist" v-model="enemy.resist[key]">
+                                    <option v-for="val, key of ['None', ...define.attribute]" :value="key">{{val}}</option>
+                                </select>
+                            </p>
+                        </fieldset>
+                    </div>
+                    <div :data-open="menu == 4">
+                        <h3>View</h3>
+                        <p><button>Minimize All</button><button>Expand All</button></p>
+                        <p><label><input type="radio">Result Only</label><label><input type="radio">Half:Half</label><label><input type="radio">Setting Only</label></p>
+                        <h4>Evaluation Score</h4>
+                        <label><input type="radio" name="expectValueDisp">Expected ATK</label>
+                        <label><input type="radio" name="expectValueDisp">Expected Damage</label>
+                    </div>
+                    <menu>
+                        <li @click="menuToggleAndSwitch(1)">エージェント追加</li>
+                        <!--<li @click="menuToggleAndSwitch(2)">バフ設定</li>-->
+                        <li @click="menuToggleAndSwitch(3)">敵設定</li>
+                        <li @click="menuToggleAndSwitch(4)">表示設定</li>
+                        <li @click="menuToggleAndSwitch(5)">Save/Load</li>
+                    </menu>
+                </div>
+            </section>
+        </main>
+        <footer>
+            @kawahara-umi
+        </footer>
+        <dialog>
+            <div>
+                <p></p>
+            </div>
+        </dialog>
+        <script type="module">
+
+            import { createApp, ref } from 'vue'
+            import deleteDialog from './comp/deleteDialog.js'
+            import agentClass from './lib/agent.js'
+
+            const calcurator = createApp({
+                components: {
+                    deleteDialog
+                },
+                data() {
+                    return {
+                        count: 0,
+                        define: define,
+                        enemyBaseDef: enemyBaseDef,
+                        agentClass: agentClass,
+                        wEngineClass: wEngineClass,
+                        discClass: discClass,
+                        enemyClass: enemyClass,
+                        data: [],
+                        enemies: [],
+                        enemyNumber: 3,
+                        std: 0,
+                        selector: {
+                            charId: 0,
+                            type: '',
+                            rank: ''
+                        },
+                        displayMode: 0,
+                        deleteTgt: 0,
+                        menu: 0, // 0:Close, 1:Add Agent, 2:Enemy, 3:View, 4:Save/Load
+                        text: text,
+                        lang: 'jp'
+                    }
+                },
+                methods: {
+                    menuToggleAndSwitch(val = 0) {
+                        if(val != this.menu) {
+                            this.menu = val
+                        } else {
+                            this.menu = 0
+                        }
+                    },
+                    scrollTo(val) {
+                        window.location.href = '#pattern-' + val
+                    },
+                    expectedValue(key) {
+                        const data = this.data[key]
+                        return data.EXP = Math.floor(data.atk * (1 + (data.critD / 100) * (data.critR / 100)))
+                    },
+                    amplificationRatio(key) {
+                        const data = this.data[key]
+                        return Math.floor(data.EXP / data.base.atk * 100) / 100
+                    },
+                    calcRatioToStd(key) {
+                        const data = this.data[key]
+                        return Math.floor(data.EXP / this.data[this.std].EXP * 100) / 100
+                    },
+                    setStd(key) {
+                        this.std = key
+                    },
+                    addPattern(key = undefined) {
+                        const newPattern = new agentClass(this.selector.charId)
+                        if(key !== undefined) {
+                            this.applyCopyData(this.createCopyData(this.data[key]), newPattern)
+                            this.data.splice(key+1, 0, newPattern)
+                        } else {
+                            this.data.push(newPattern)
+                        }
+                    },
+                    toggleWindowSize(key) {
+                        const target = document.querySelector('#pattern-'+key)
+                        target.dataset.display != 'close'
+                            ? target.dataset.display = 'close'
+                            : target.dataset.display = 'open'
+                    },
+                    callDeleteDialog(key) {
+                        const dialog = document.querySelector('#delete')
+                        this.deleteTgt = key
+                        dialog.showModal()
+                    },
+                    closeDeleteDialog() {
+                        this.deleteTgt = null
+                        document.querySelector('#delete').close()
+                    },
+                    deletePattern() {
+                        const dialog = document.querySelector('#delete')
+                        const key = dialog.dataset.target
+                        this.data.splice(key, 1)
+                        dialog.close()
+                    },
+                    displayUnit(text) {
+                        if(!text) return ''
+                        if(text != 'anm-p' && text.at(-1) != 'v') return '%'
+                    },
+                    setDriver(tgtObj, discId, obj) {
+                        const discSet = tgtObj.equipment.discSet
+
+                        const existKey = discSet.findIndex(val => val == discId)
+                        if(existKey > -1) {
+                            discSet[existKey] = null
+                            tgtObj.calcDiscTotal()
+                            return false
+                        }
+                        
+                        const tgtKey = discSet.findIndex(val => val == null)
+                        if(tgtKey > -1) {
+                            discSet[tgtKey] = discId
+                            tgtObj.calcDiscTotal()
+                            return true
+                        }
+                    },
+                    setDiscMainStat(tgtDisc, statName) {
+                        const tgtSubSlot = tgtDisc.sub.filter(item => item.type == statName)
+                        if(!tgtSubSlot.length) return false
+                        for(const item of tgtSubSlot) {
+                            item.type = ''
+                        }
+                        return true
+                    },
+                    setDiscSubStat(tgtDisc, statName, tgtAgent) {
+                        let applicable = tgtDisc.sub.filter(slot => slot.type == statName)
+                        if(applicable.length != 0) {
+                            for(const slot of applicable) {
+                                slot.type = ''
+                            }
+                            tgtAgent.calcDiscTotal()
+                            return false
+                        }
+                        applicable = tgtDisc.sub.find(slot => slot.type == '')
+                        if(applicable) {
+                            applicable.type = statName
+                            tgtAgent.calcDiscTotal()
+                            return true
+                        }
+                    },
+                    createCopyData(data) {
+                        const obj = {}
+                        obj.charId = data.charId
+                        obj.promotion = data.promotion
+                        obj.level = data.level
+                        obj.mindscapeLevel = data.mindscapeLevel
+                        obj.skills = {}
+                        for(let i of define.skillType) {
+                            obj.skills[i] = {}
+                            obj.skills[i].level = data.skills[i].level
+                        }
+                        obj.wEngine = {}
+                        obj.wEngine.id = data.wEngine.id
+                        obj.wEngine.level = data.wEngine.level
+                        obj.wEngine.grade = data.wEngine.grade
+                        obj.equipment = Object.assign({}, JSON.parse(JSON.stringify(data.equipment)))
+                        return obj
+                    },
+                    applyCopyData(data, target) {
+                        target.initAgent(data.charId)
+                        target.promotion = data.promotion
+                        target.level = data.level
+                        target.mindscapeLevel = data.mindscapeLevel
+                        for(let i of define.skillType) {
+                            target.skills[i].level = data.skills[i].level
+                        }
+                        target.wEngine.id = data.wEngine.id
+                        target.wEngine.level = data.wEngine.level
+                        target.wEngine.grade = data.wEngine.grade
+                        Object.assign(target.equipment, data.equipment)
+                    },
+                    autoSave() {
+                        const data = []
+                        this.data.forEach((obj) => {
+                            data.push(this.createCopyData(obj))
+                        })
+                        try {
+                            sessionStorage.setItem('auto', JSON.stringify(data))
+                            console.log('automaticaly saved.', data)
+                        } catch(e) {
+                            console.log(e)
+                        }
+                    },
+                    saveData() {
+                        localStorage
+                    },
+                    loadData(key) {
+                        const data = JSON.parse(sessionStorage.getItem(key))
+                        if(!data) { throw new Error('Save data Not found.') }
+                        console.log('data loaded.', data)
+                        for(let pattern of data) {
+                            const newAgent = new agentClass(0)
+                            this.applyCopyData(pattern, newAgent)
+                            this.data.push(newAgent)
+                        }
+                    },
+                    forceUpdate() {
+                        this.count++
+                    }
+                },
+                mounted: function() {
+                    console.log('mounted')
+                    try {
+                        this.loadData('auto')
+                    } catch(e) {
+                        console.log(e)
+                        this.data.push(new agentClass(0))
+                    }
+                    for(let i = 0; i < this.enemyNumber; i++){
+                        this.enemies.push(new enemyClass(i))
+                    }
+                },
+                updated: function() {
+                    this.autoSave()
+                }
+            }).mount('main')
+
+        </script>
+    </body>
+</html>
