@@ -82,3 +82,35 @@ define = {
         
     }
 }
+
+text = {
+    control: {
+        title: {jp:'表示', en:'Display'},
+        result: {jp:'結果のみ', en: 'Result'},
+        both: {jp:'両方表示', en: 'Both'},
+        setting: {jp:'設定のみ', en: 'Setting'}
+    },
+    agent: {jp:'エージェント', en:'Agent'},
+    engine: {jp:'音動機', en:'W-Engine'},
+    driver: {jp:'ドライバ', en:'Driver'},
+    status: {
+        hp: {jp:'HP', en:'HP'},
+        atk: {jp:'攻撃力', en:'ATK'},
+        def: {jp:'防御力', en:'DEF'},
+        imp: {jp:'衝撃力', en:'IMP'},
+        critR: {jp:'会心率', en:'CRIT Rate'},
+        critD: {jp:'会心ダメージ', en:'CRIT DMG'},
+        anmB: {jp:'異常掌握', en:'Anomaly Buildup'},
+        anmP: {jp:'異常マスタリー', en:'Anomaly Proficiency'},
+        penR: {jp:'貫通率', en:'PEN Ratio'},
+        penV: {jp:'貫通値', en:'PEN'},
+        enReg: {jp:'EN回復', en:'EN Regen'}
+    },
+    attribute: {
+        phys: {jp:'物理', en:'Phys.'},
+        fire: {jp:'炎', en:'Fire'},
+        ice: {jp:'氷', en:'Ice'},
+        elec: {jp:'電気', en:'Elec.'},
+        ether: {jp:'エーテル', en:'Ether'}
+    }
+}

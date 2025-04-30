@@ -18,7 +18,34 @@ class agentClass {
             sub: {min: 0, max: 5}
         }
     }
-
+    static levelCoefficient = levelCoefficient
+    static activeBuff = {rate: 0, int: 0}
+    static enemy = {
+        defCalc: function() { return this.defClass * (agentClass.levelCoefficient[(this.level > 60 ? 60 : this.level) - 1] * 100) /100 },
+        _defClass: 60,
+        get defClass() { return this._defClass },
+        set defClass(val) {
+            this._defClass = val
+            this.def = this.defCalc()
+        },
+        _level: 60,
+        get level() { return this._level },
+        set level(val) {
+            this._level = val
+            this.def = this.defCalc()
+        },
+        _def: 952.8,
+        get def() { return this._def},
+        set def(val) { this._def = val < 0 ? 0 : val },
+        _defDebuff: 0,
+        get defDebuff() { return this._defDebuff },
+        set defDebuff(val) { this._defDebuff = val < 0 ? 0 : val },
+        weak: {attribute: '', rate: 0},
+        resist: {attribute: '', rate: 0},
+        _breakRate: 100,
+        get breakRate() { return this._breakRate },
+        set breakRate(val) { this._breakRate = val < 100 ? 100 : val }
+    }
     static selector = {
         type: agentClass.types[0],
         rank: agentClass.ranks[0]
@@ -169,7 +196,27 @@ class agentClass {
     skill
 
     skills = {
-        levelLimit : 12,
+        _levelLimit : 12,
+        get levelLimit () {
+            return this._levelLimit
+        },
+        set levelLimit (val) {
+            for(let key of define.skillType) {
+                if(this[key].level > this._levelLimit) this[key].level = this._levelLimit 
+            }
+            if(this.levelBatch > val) this.levelBatch = val
+            this._levelLimit = val
+        },
+        _levelBatch : 11,
+        get levelBatch() {
+            return this._levelBatch
+        },
+        set levelBatch(val) {
+            for(let key of define.skillType) {
+                this[key].level = val
+            }
+            this._levelBatch = val
+        },
         basic: {
             level: 11,
             data: []
@@ -248,9 +295,18 @@ class agentClass {
             'bonus-eth': 0
         }
     }
+    
+    // コアスキル、音動機、ディスクから得られる戦闘中バフデータの配列
+
+    // エージェント変更用の変数
     selector = {
         type: agentClass.types[0],
-        rank: agentClass.ranks[0]
+        rank: agentClass.ranks[0],
+        wEngine: {
+            autoEquipment: true,
+            type: wEngineClass.types[0],
+            rank: wEngineClass.ranks[0]
+        }
     }
 
     constructor (charId) {
@@ -302,17 +358,13 @@ class agentClass {
         this.base._anmP = baseData[14]
         this.base._penR = baseData[15]
         this.base._enReg = baseData[16]
+        this.base.core = {}
         this.coreSkill.oddEffect.type = baseData[17]
         this.coreSkill.oddEffect.val = baseData[18]
         this.coreSkill.evenEffect.type = baseData[19]
         this.coreSkill.evenEffect.val = baseData[20]
-        this.coreLevel = 6
 
-        this.equipment.wEngine.type = this.type
-        this.equipment.wEngine.rank = this.rank
-        this.equipment.wEngine.id = baseData[21]
-
-        this.setWEngine(baseData[21])
+        if(this.selector.wEngine.autoEquipment) this.setWEngine(baseData[21])
         this.calcDiscTotal()
         this.setSkillData()
     }
@@ -358,6 +410,7 @@ class agentClass {
                 Object.assign(this.equipment.wEngine.advSt, {[key]: 0})
             }
         }
+        this.equipment.wEngine.id = id
         //console.log(this.equipment.wEngine)
     }
 
@@ -387,43 +440,70 @@ class agentClass {
         }
     }
 
-    static activeBuff = {rate: 0, increase: 0}
-    static enemyStatus = {
-        breakRate: 100,
-        enemyDef: 100,
-        weak: {attribute: '', rate: 0},
-        resist: {attribute: '', rate: 0}
-    }
-
     calcDmg(param, level, mode = '') {
         //console.log('related data:', param, level, mode)
+        
+        // ダメージ倍率計算関数
         const multiplier = () => {
-            return ((param.multiplier * 10) + ((param.growth * 10) * level)) / 10
+            return ((param.multiplier * 10) + ((param.growth * 10) * (level - 1))) / 10
         }
+        if(mode == 'multiplier') return multiplier()
+
         let result
 
-        if(mode == 'multiplier') return multiplier()
-        
-        const atkInField = this.atk * (100 + agentClass.activeBuff.rate) / 100 + agentClass.activeBuff.increase
+        // フィールド上でのバフ込み攻撃力計算
+        const atkInField = this.atk * (100 + agentClass.activeBuff.rate) / 100 + agentClass.activeBuff.int
         //('atk(with activeBuff) : ' + atkInField)
+        // 攻撃力 * スキル倍率(異常倍率)
+        if(mode == 'anomaly') {
+            const anmMultiplier = (() => {
+                switch(this.attribute.primary.toLowerCase()) {
+                    case 'physical' : return 713
+                    case 'fire'     : return 50
+                    case 'ice'      : return 500
+                    case 'electric' : return 125
+                    case 'ether'    : return 62.5
+                }
+            })()
+            result = atkInField * this.anmP / 100
+            result *= anmMultiplier / 100
+            result *= 1 + (this.level - 1) / (agentClass.rangeLimits.level.max - 1)
+            console.log(result)
+        } else {
+            result = atkInField * multiplier() / 100
+        }
+        // スキルの属性に対応するダメージボーナスを代入
         const attrBonus = (() => {
-            switch(param.attribute) {
-                case 'Physical' : return this.bonusPhy
-                case 'Fire'     : return this.bonusFire
-                case 'Ice'      : return this.bonusIce
-                case 'Electric' : return this.bonusEle
-                case 'Ether'    : return this.bonusEth
+            switch(param.attribute.toLowerCase()) {
+                case 'physical' : return this.bonusPhy
+                case 'fire'     : return this.bonusFire
+                case 'ice'      : return this.bonusIce
+                case 'electric' : return this.bonusEle
+                case 'ether'    : return this.bonusEth
             }
         })()
-        result = atkInField * multiplier() * (100 + this.bonusDmg + attrBonus) / 10000
-        if(param.attribute == agentClass.enemyStatus.resist.attribute) {
-            result = result * (100 - agentClass.enemyStatus.resist.rate) / 100
+        result = result * (100 + this.bonusDmg + attrBonus) / 100
+        console.log(result)
+        // 敵耐性補正計算
+        if(param.attribute == agentClass.enemy.resist.attribute) {
+            result = result * (100 - agentClass.enemy.resist.rate) / 100
             //console.log('with resist : ' + result)
-        } else if(param.attribute == agentClass.enemyStatus.weak.attribute) {
-            result = result * (100 + agentClass.enemyStatus.weak.rate) / 100
+        } else if(param.attribute == agentClass.enemy.weak.attribute) {
+            result = result * (100 + agentClass.enemy.weak.rate) / 100
             //console.log(result)
         }
-        result = result * agentClass.enemyStatus.breakRate * agentClass.enemyStatus.enemyDef / 10000
+        // 防御補正計算
+        let enemyDefence = (agentClass.enemy.def * (100 - agentClass.enemy.defDebuff) * (100 - this.penR)) / 10000 - this.penV
+        if(enemyDefence < 0) enemyDefence = 0
+        const attackerCoefficient = 50 * agentClass.levelCoefficient[this.level - 1]
+        const defCorrection = attackerCoefficient / (attackerCoefficient + enemyDefence) * 100
+        result = result * agentClass.enemy.breakRate * defCorrection / 10000
+        //console.log(result)
+
+        if(mode == 'anomaly') {
+            return Math.floor(result)
+        }
+        // 計算結果出力
         const normalDmg = Math.floor(result)
         if(mode == 'normal') {
             //console.log('Base Damege Output : ' + normalDmg)
